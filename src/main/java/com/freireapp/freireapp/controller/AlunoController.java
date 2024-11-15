@@ -31,4 +31,9 @@ public class AlunoController {
     public List<Map<String,Object>> ListarCadeiras(@PathVariable Long id) {
         return alunoService.ListarCadeiras(id);
     }
+
+    @GetMapping("/{id}/aulas-hoje")
+    public List<Map<String, Object>> ListarAulasDoDia(@PathVariable Long id) {
+        return alunoService.ListarAulasDoDia(id);
+    }
 }
