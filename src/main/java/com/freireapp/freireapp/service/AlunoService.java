@@ -20,4 +20,8 @@ public class AlunoService {
     public List<Map<String, Object>> notasAluno(Long id) {
         return alunoRepository.getResultadoAvaliacao(id);
     }
+
+    public List<Map<String, Object>> ListarCadeiras(Long id) {
+        return alunoRepository.getTodasCadeiras(id);
+    }
 }

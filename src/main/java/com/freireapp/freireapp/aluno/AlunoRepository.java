@@ -35,4 +35,15 @@ public class AlunoRepository {
                 "where p.id_pessoa = ?";
         return jdbcTemplate.queryForList(sql,id);
     }
+
+    public List<Map<String,Object>> getTodasCadeiras(Long id) {
+        String sql = "SELECT a2.dia_semana AS dia_aula, a2.hora_inicio, a2.hora_fim, a2.sala, p3.especializacao AS cadeira, p_prof.nome AS nome_professor, p_prof.id_pessoa AS id_professor\n" +
+                "FROM Pessoa p \n" +
+                "JOIN Aluno a ON a.fk_Pessoa_id_pessoa = p.id_pessoa\n" +
+                "JOIN Aula a2 ON a.fk_Pessoa_id_pessoa = a2.fk_Aluno_fk_Pessoa_id_pessoa\n" +
+                "JOIN Professor p3 ON p3.fk_Pessoa_id_pessoa = a2.fk_Professor_fk_Pessoa_id_pessoa\n" +
+                "JOIN Pessoa p_prof ON p_prof.id_pessoa = p3.fk_Pessoa_id_pessoa\n" +
+                "WHERE p.id_pessoa = ?";
+        return jdbcTemplate.queryForList(sql,id);
+    }
 }
