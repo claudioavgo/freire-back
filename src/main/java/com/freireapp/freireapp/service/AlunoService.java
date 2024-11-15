@@ -32,8 +32,6 @@ public class AlunoService {
     public List<Map<String,Object>> ListarAulasDoDia(Long id) {
         String hoje = LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("pt","BR"));
         String diaSemana = hoje.substring(0, 1).toUpperCase() + hoje.substring(1);
-
-        System.out.println(diaSemana);
         return alunoRepository.getAulasDoDia(id, diaSemana);
     }
 }
