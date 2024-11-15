@@ -27,4 +27,8 @@ public class AlunoController {
         return alunoService.notasAluno(id);
     }
 
+    @GetMapping("/{id}/cadeiras")
+    public List<Map<String,Object>> ListarCadeiras(@PathVariable Long id) {
+        return alunoService.ListarCadeiras(id);
+    }
 }
