@@ -11,7 +11,6 @@ import java.util.Map;
 @RequestMapping("/api/aluno")
 @CrossOrigin(origins = "*")
 public class AlunoController {
-
     @Autowired
     private AlunoService alunoService;
 

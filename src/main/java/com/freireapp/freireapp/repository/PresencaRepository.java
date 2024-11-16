@@ -1,4 +1,4 @@
-package com.freireapp.freireapp.professor;
+package com.freireapp.freireapp.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

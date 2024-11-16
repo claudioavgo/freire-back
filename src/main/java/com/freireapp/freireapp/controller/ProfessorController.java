@@ -29,7 +29,7 @@ public class ProfessorController {
     @PostMapping("/chamada")
     public ResponseEntity<String> registrarFaltas(@RequestBody RegistroFaltasDTO registroFaltas) {
         presencaService.registrarChamada(registroFaltas);
-        return ResponseEntity.ok("Faltas registradas com sucesso.");
+        return ResponseEntity.status(200).body("Faltas registradas com sucesso.");
     }
 
 }

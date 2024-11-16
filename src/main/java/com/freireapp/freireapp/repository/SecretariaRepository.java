@@ -1,4 +1,4 @@
-package com.freireapp.freireapp.secretaria;
+package com.freireapp.freireapp.repository;
 
 import com.freireapp.freireapp.dto.CadastroDTO;
 import org.springframework.jdbc.core.JdbcTemplate;

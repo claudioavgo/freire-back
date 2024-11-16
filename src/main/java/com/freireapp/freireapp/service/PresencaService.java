@@ -1,8 +1,8 @@
 package com.freireapp.freireapp.service;
 
 import com.freireapp.freireapp.dto.RegistroFaltasDTO;
-import com.freireapp.freireapp.pessoa.PessoaRepository;
-import com.freireapp.freireapp.professor.PresencaRepository;
+import com.freireapp.freireapp.repository.PessoaRepository;
+import com.freireapp.freireapp.repository.PresencaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
