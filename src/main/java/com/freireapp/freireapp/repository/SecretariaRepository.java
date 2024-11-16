@@ -26,7 +26,7 @@ public class SecretariaRepository {
             data.dataNascimento()
         );
         if (data.tipo() == 0) {
-            String sql1 = "INSERT INTO Aluno (fk_Pessoa_id_pessoa, indice_rendimento, periodo) \n" +
+            String sql1 = "INSERT INTO Aluno (fk_Pessoa_id_pessoa, periodo) \n" +
                     "VALUES  (?, ?, ?)";
             return jdbcTemplate.update(sql1);
         }

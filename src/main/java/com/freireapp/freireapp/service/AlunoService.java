@@ -46,4 +46,8 @@ public class AlunoService {
     public List<Map<String,Object>> Financeiro(Long id){
         return alunoRepository.getPagamentos(id);
     }
+
+    public List<Map<String, Object>> todasNotas(Long id) {
+        return alunoRepository.getTodasProvas(id);
+    }
 }
