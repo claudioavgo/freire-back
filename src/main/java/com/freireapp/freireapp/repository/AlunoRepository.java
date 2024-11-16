@@ -36,7 +36,7 @@ public class AlunoRepository {
     }
 
     public List<Map<String, Object>> getTodasDisciplinas(Long idAluno) {
-        String sql = "SELECT a.dia_semana as dia_aula, a.hora_inicio, a.hora_fim, a.sala, d.nome AS disciplina, d.id_disciplina ,pe.nome AS nome_professor, pe.id_pessoa as id_professor\n" +
+        String sql = "SELECT DISTINCT d.id_disciplina, d.nome AS disciplina, pe.nome AS professor\n" +
                 "FROM Matriculado m\n" +
                 "JOIN Disciplina d ON m.fk_Disciplina_id_disciplina = d.id_disciplina\n" +
                 "JOIN Aula a ON a.fk_Disciplina_id_disciplina = d.id_disciplina\n" +
@@ -82,18 +82,11 @@ public class AlunoRepository {
     }
 
     public List<Map<String, Object>> getPagamentos(Long idAluno) {
-        String sql = "SELECT p.id_pessoa AS id_aluno, " +
-                "       p.nome AS nome_aluno, " +
-                "       pg.id_pagamento AS id_boleto, " +
-                "       pg.data_pagamento, " +
-                "       pg.valor, " +
-                "       pg.status, " +
-                "       a.matricula, " +
-                "       a.periodo " +
-                "FROM Pagamento pg " +
-                "JOIN Realiza r ON pg.id_pagamento = r.fk_Pagamento_id_pagamento " +
-                "JOIN Aluno a ON r.fk_Aluno_fk_Pessoa_id_pessoa = a.fk_Pessoa_id_pessoa " +
-                "JOIN Pessoa p ON a.fk_Pessoa_id_pessoa = p.id_pessoa " +
+        String sql = "SELECT pg.id_pagamento, pg.data_pagamento, pg.valor, pg.status \n" +
+                "FROM Pagamento pg\n" +
+                "JOIN RealizaPagamento rp ON pg.id_pagamento = rp.fk_Pagamento_id_pagamento\n" +
+                "JOIN Aluno a ON rp.fk_Aluno_fk_Pessoa_id_pessoa = a.fk_Pessoa_id_pessoa\n" +
+                "JOIN Pessoa p ON a.fk_Pessoa_id_pessoa = p.id_pessoa\n" +
                 "WHERE p.id_pessoa = ?";
         return jdbcTemplate.queryForList(sql, idAluno);
     }
