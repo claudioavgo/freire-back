@@ -14,17 +14,23 @@ public class SecretariaRepository {
 
     public int cadastrarPessoa(CadastroDTO data) {
         String sql = "INSERT INTO Pessoa (nome, rua, numero, cidade, telefone_1, telefone_2, email, senha, data_nascimento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        return jdbcTemplate.update(sql,
-                data.nome(),
-                data.rua(),
-                data.numero(),
-                data.cidade(),
-                data.telefone1(),
-                data.telefone2(),
-                data.email(),
-                data.senha(),
-                data.dataNascimento()
+        jdbcTemplate.update(sql,
+            data.nome(),
+            data.rua(),
+            data.numero(),
+            data.cidade(),
+            data.telefone1(),
+            data.telefone2(),
+            data.email(),
+            data.senha(),
+            data.dataNascimento()
         );
+        if (data.tipo() == 0) {
+            String sql1 = "INSERT INTO Aluno (fk_Pessoa_id_pessoa, indice_rendimento, periodo) \n" +
+                    "VALUES  (?, ?, ?)";
+            return jdbcTemplate.update(sql1);
+        }
+        return 0;
     }
 }
 

@@ -19,9 +19,9 @@ public class AlunoController {
         return alunoService.quantidadeFaltas(id);
     }
 
-    @GetMapping("/{id}/avaliacao")
-    public List<Map<String,Object>> notasAluno(@PathVariable Long id) {
-        return alunoService.notasAluno(id);
+    @GetMapping("/{idAluno}/avaliacao/{idDisciplina}")
+    public List<Map<String,Object>> notasAluno(@PathVariable Long idAluno, @PathVariable Long idDisciplina) {
+        return alunoService.notasAluno(idAluno, idDisciplina);
     }
 
     @GetMapping("/{id}/disciplinas")

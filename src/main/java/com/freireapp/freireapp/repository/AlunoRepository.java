@@ -27,12 +27,12 @@ public class AlunoRepository {
     }
 
 
-    public List<Map<String, Object>> getResultadoAvaliacao(Long id) {
+    public List<Map<String, Object>> getResultadoAvaliacao(Long idAluno, Long idDisciplina) {
         String sql = "SELECT d.id_disciplina ,d.nome, a.descricao, ra.nota,ra.feedback, a.`data` \n" +
                 "FROM ResultadoAvaliacao ra\n" +
                 "JOIN Avaliacao a ON ra.fk_Avaliacao_id_avaliacao = a.id_avaliacao JOIN Disciplina d on d.id_disciplina = a.fk_Disciplina_id_disciplina \n" +
-                "WHERE ra.fk_Aluno_fk_Pessoa_id_pessoa = ?";
-        return jdbcTemplate.queryForList(sql,id);
+                "WHERE ra.fk_Aluno_fk_Pessoa_id_pessoa = ? and d.id_disciplina = ?";
+        return jdbcTemplate.queryForList(sql,idAluno, idDisciplina);
     }
 
     public List<Map<String, Object>> getTodasDisciplinas(Long idAluno) {
@@ -76,10 +76,32 @@ public class AlunoRepository {
         return jdbcTemplate.queryForList(sql, id);
     }
 
-    public List<Map<String, Object>> getStreak(Long id) {
-        String sql = "";
-        return jdbcTemplate.queryForList(sql,id);
+    public List<Map<String, Object>> getStreak(Long idAluno) {
+        String sql = "WITH PresencasOrdenadas AS ( " +
+                "    SELECT pr.data, " +
+                "           pr.status, " +
+                "           ROW_NUMBER() OVER (PARTITION BY pr.fk_Aluno_fk_Pessoa_id_pessoa ORDER BY pr.data) AS rn " +
+                "    FROM Presenca pr " +
+                "    WHERE pr.fk_Aluno_fk_Pessoa_id_pessoa = ? " +
+                "), " +
+                "Streaks AS ( " +
+                "    SELECT po1.data AS inicio_streak, " +
+                "           MAX(po2.data) AS fim_streak, " +
+                "           COUNT(*) AS streak " +
+                "    FROM PresencasOrdenadas po1 " +
+                "    JOIN PresencasOrdenadas po2 " +
+                "      ON po2.rn >= po1.rn " +
+                "     AND po2.status = 1 " +
+                "     AND DATEDIFF(po2.data, po1.data) = (po2.rn - po1.rn) " +
+                "    WHERE po1.status = 1 " +
+                "    GROUP BY po1.data " +
+                "    HAVING streak > 1 " +
+                ") " +
+                "SELECT inicio_streak, fim_streak, streak " +
+                "FROM Streaks";
+        return jdbcTemplate.queryForList(sql, idAluno);
     }
+
 
     public List<Map<String, Object>> getPagamentos(Long idAluno) {
         String sql = "SELECT pg.id_pagamento, pg.data_pagamento, pg.valor, pg.status \n" +

@@ -21,8 +21,8 @@ public class AlunoService {
         return alunoRepository.getQuantidadeFaltas(id);
     }
 
-    public List<Map<String, Object>> notasAluno(Long id) {
-        return alunoRepository.getResultadoAvaliacao(id);
+    public List<Map<String, Object>> notasAluno(Long idAluno, Long idDisciplina) {
+        return alunoRepository.getResultadoAvaliacao(idAluno, idDisciplina);
     }
 
     public List<Map<String, Object>> ListarDisciplinas(Long id) {

@@ -10,6 +10,6 @@ public record CadastroDTO(
     String email,
     String senha,
     String dataNascimento,
-    String tipo
+    int tipo
 ) {
 }
