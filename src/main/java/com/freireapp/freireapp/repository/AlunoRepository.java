@@ -35,10 +35,13 @@ public class AlunoRepository {
         return jdbcTemplate.queryForList(sql,id);
     }
 
-    public List<Map<String, Object>> getTodasCadeiras(Long idAluno) {
-        String sql = "SELECT d.nome\n" +
+    public List<Map<String, Object>> getTodasDisciplinas(Long idAluno) {
+        String sql = "SELECT a.dia_semana as dia_aula, a.hora_inicio, a.hora_fim, a.sala, d.nome AS disciplina, d.id_disciplina ,pe.nome AS nome_professor, pe.id_pessoa as id_professor\n" +
                 "FROM Matriculado m\n" +
                 "JOIN Disciplina d ON m.fk_Disciplina_id_disciplina = d.id_disciplina\n" +
+                "JOIN Aula a ON a.fk_Disciplina_id_disciplina = d.id_disciplina\n" +
+                "JOIN Professor p ON p.fk_Pessoa_id_pessoa = d.fk_Professor_fk_Pessoa_id_pessoa\n" +
+                "JOIN Pessoa pe ON pe.id_pessoa = p.fk_Pessoa_id_pessoa\n" +
                 "WHERE m.fk_Aluno_fk_Pessoa_id_pessoa = ?";
         return jdbcTemplate.queryForList(sql, idAluno);
     }
