@@ -34,4 +34,16 @@ public class AlunoService {
         String diaSemana = hoje.substring(0, 1).toUpperCase() + hoje.substring(1);
         return alunoRepository.getAulasDoDia(id, diaSemana);
     }
+
+    public List<Map<String,Object>> ListarAulas(Long id){
+        return alunoRepository.getAulas(id);
+    }
+
+    public List<Map<String,Object>> Streak(Long id){
+        return alunoRepository.getStreak(id);
+    }
+
+    public List<Map<String,Object>> Financeiro(Long id){
+        return alunoRepository.getPagamentos(id);
+    }
 }

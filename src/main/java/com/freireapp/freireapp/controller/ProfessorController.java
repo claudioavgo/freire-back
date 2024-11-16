@@ -3,6 +3,7 @@ package com.freireapp.freireapp.controller;
 import com.freireapp.freireapp.dto.RegistroFaltasDTO;
 import com.freireapp.freireapp.service.PessoaService;
 import com.freireapp.freireapp.service.PresencaService;
+import com.freireapp.freireapp.service.ProfessorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ public class ProfessorController {
     @Autowired
     private PresencaService presencaService;
     @Autowired
+    private ProfessorService professorService;
+    @Autowired
     private PessoaService pessoaService;
 
     @GetMapping()
@@ -30,6 +33,11 @@ public class ProfessorController {
     public ResponseEntity<String> registrarFaltas(@RequestBody RegistroFaltasDTO registroFaltas) {
         presencaService.registrarChamada(registroFaltas);
         return ResponseEntity.status(200).body("Faltas registradas com sucesso.");
+    }
+
+    @GetMapping("/{id}/qtd-alunos")
+    public List<Map<String, Object>> ListarQuantidadeDeAlunos(@PathVariable Long id) {
+        return professorService.ListarQuantidadeDeAlunos(id);
     }
 
 }
