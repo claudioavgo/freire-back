@@ -1,6 +1,6 @@
 package com.freireapp.freireapp.service;
 
-import com.freireapp.freireapp.aluno.AlunoRepository;
+import com.freireapp.freireapp.repository.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class AlunoService {
         return alunoRepository.getResultadoAvaliacao(id);
     }
 
-    public List<Map<String, Object>> ListarCadeiras(Long id) {
+    public List<Map<String, Object>> ListarDisciplinas(Long id) {
         return alunoRepository.getTodasCadeiras(id);
     }
 
