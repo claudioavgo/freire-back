@@ -22,15 +22,15 @@ public class SecretariaRepository {
     public void cadastrarPessoa(CadastroDTO data) {
         String sql = "INSERT INTO Pessoa (nome, rua, numero, cidade, telefone_1, telefone_2, email, senha, data_nascimento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
-            data.nome(),
-            data.rua(),
-            data.numero(),
-            data.cidade(),
-            data.telefone1(),
-            data.telefone2(),
-            data.email(),
-            data.senha(),
-            data.dataNascimento()
+                data.nome(),
+                data.rua(),
+                data.numero(),
+                data.cidade(),
+                data.telefone1(),
+                data.telefone2(),
+                data.email(),
+                data.senha(),
+                data.dataNascimento
         );
     }
 
@@ -56,4 +56,3 @@ public class SecretariaRepository {
         jdbcTemplate.update(sql, id,data.idSecretaria());
     }
 }
-

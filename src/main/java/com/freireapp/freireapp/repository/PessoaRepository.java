@@ -81,7 +81,7 @@ public class PessoaRepository {
             return null;
         }
     }
-
+  
     public List<Map<String, Object>> getListaProfessores() {
         String sql = "SELECT p.nome, p2.especializacao FROM Pessoa p JOIN Professor p2 ON p.id_pessoa = p2.fk_Pessoa_id_pessoa";
         return jdbcTemplate.queryForList(sql);

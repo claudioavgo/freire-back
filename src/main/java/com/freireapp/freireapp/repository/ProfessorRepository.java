@@ -13,8 +13,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Map;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Repository
 public class ProfessorRepository {
@@ -34,8 +32,6 @@ public class ProfessorRepository {
         String sql = "SELECT " +
                 "    d.nome AS disciplina, " +
                 "    p_aluno.nome AS aluno, " +
-                "    GROUP_CONCAT(DISTINCT ra.nota ORDER BY ra.nota SEPARATOR ', ') AS notas, " +
-                "    COUNT(DISTINCT CASE WHEN pr.status = 'F' THEN pr.id_presenca END) AS faltas " +
                 "FROM " +
                 "    Disciplina d " +
                 "JOIN " +
@@ -57,7 +53,11 @@ public class ProfessorRepository {
                 "WHERE " +
                 "    d.fk_Professor_fk_Pessoa_id_pessoa = ? " +
                 "GROUP BY " +
-                "    d.nome, p_aluno.nome";
+                " d.nome, p_aluno.nome";
+
+        return jdbcTemplate.queryForList(sql, idProfessor);
+    }
+
 
         List<Map<String, Object>> results = jdbcTemplate.queryForList(sql, idProfessor);
 
