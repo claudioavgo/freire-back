@@ -14,9 +14,9 @@ public class AlunoController {
     @Autowired
     private AlunoService alunoService;
 
-    @GetMapping("/{id}/faltas")
-    public List<Map<String, Object>> quantidadeFaltas(@PathVariable Long id) {
-        return alunoService.quantidadeFaltas(id);
+    @GetMapping("/{idAluno}/faltas/{idDisciplina}")
+    public List<Map<String, Object>> quantidadeFaltas(@PathVariable Long idAluno, @PathVariable Long idDisciplina) {
+        return alunoService.quantidadeFaltas(idAluno, idDisciplina);
     }
 
     @GetMapping("/{id}/avaliacao")

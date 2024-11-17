@@ -13,7 +13,7 @@ public class AlunoRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public List<Map<String, Object>> getQuantidadeFaltas(Long idAluno) {
+    public List<Map<String, Object>> getQuantidadeFaltas(Long idAluno, Long idDisciplina) {
         String sql = "SELECT d.nome AS disciplina, " +
                 "       SUM(CASE WHEN pr.status = 0 THEN 1 ELSE 0 END) AS faltas " +
                 "FROM Presenca pr " +
@@ -23,7 +23,7 @@ public class AlunoRepository {
                 "JOIN Pessoa p ON pf.fk_Pessoa_id_pessoa = p.id_pessoa " +
                 "WHERE pr.fk_Aluno_fk_Pessoa_id_pessoa = ? " +
                 "GROUP BY d.nome, p.nome";
-        return jdbcTemplate.queryForList(sql, idAluno);
+        return jdbcTemplate.queryForList(sql, idAluno, idDisciplina);
     }
 
     public List<Map<String, Object>> getTodasProvas(Long id) {

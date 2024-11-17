@@ -17,8 +17,8 @@ public class AlunoService {
     @Autowired
     private AlunoRepository alunoRepository;
 
-    public List<Map<String, Object>> quantidadeFaltas(Long id) {
-        return alunoRepository.getQuantidadeFaltas(id);
+    public List<Map<String, Object>> quantidadeFaltas(Long idAluno, Long idDisciplina) {
+        return alunoRepository.getQuantidadeFaltas(idAluno, idDisciplina);
     }
 
     public List<Map<String, Object>> notasAluno(Long idAluno, Long idDisciplina) {
