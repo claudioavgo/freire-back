@@ -11,6 +11,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Map;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class ProfessorRepository {
@@ -61,23 +63,18 @@ public class ProfessorRepository {
             String notas = (String) row.get("notas");
             if (notas != null) {
                 String[] notasArray = notas.split(", ");
-                if (notasArray.length > 0) {
-                    row.put("notas", Double.valueOf(notasArray[0]));
-                } else {
-                    row.put("notas", null);
+                List<Double> notasNumericas = new ArrayList<>();
+                for (String nota : notasArray) {
+                    notasNumericas.add(Double.valueOf(nota));
                 }
-                if (notasArray.length > 1) {
-                    row.put("notas2", Double.valueOf(notasArray[1]));
-                } else {
-                    row.put("notas2", null);
-                }
+                row.put("notas", notasNumericas);
             } else {
-                row.put("notas", null);
-                row.put("notas2", null);
+                row.put("notas", new ArrayList<>());
             }
         }
         return results;
     }
+
 
 
 
