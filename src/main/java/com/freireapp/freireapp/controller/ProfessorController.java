@@ -61,4 +61,9 @@ public class ProfessorController {
     public ResponseEntity notasAvaliacao(@RequestBody NotasAvaliacaoDTO data) {
         return ResponseEntity.status(200).body(professorService.notasAvaliacao(data));
     }
+
+    @GetMapping("/{id}/disciplina")
+    public Map<String, Object> listarDisciplinas (@PathVariable Long id) {
+        return professorService.listarDisciplinas(id);
+    }
 }

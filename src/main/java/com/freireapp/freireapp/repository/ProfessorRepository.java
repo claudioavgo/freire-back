@@ -91,4 +91,11 @@ public class ProfessorRepository {
                 "VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql, data.idAluno(), data.idProfessor(), data.idAvaliacao(), data.nota(), data.feedback());
     }
+
+    public Map<String, Object> listarDisciplinas(Long id) {
+        String sql = "SELECT d.nome\n" +
+                "FROM Professor p JOIN Disciplina d ON d.fk_Professor_fk_Pessoa_id_pessoa =p.fk_Pessoa_id_pessoa\n" +
+                "WHERE p.fk_Pessoa_id_pessoa = ?";
+        return jdbcTemplate.queryForMap(sql, id);
+    }
 }

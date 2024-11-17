@@ -38,4 +38,8 @@ public class ProfessorService {
         professorRepository.inserirResultadoAvaliacao(data);
         return ResponseEntity.status(200).body("Resultado inserido com sucesso.");
     }
+
+    public Map<String, Object> listarDisciplinas(Long id) {
+        return professorRepository.listarDisciplinas(id);
+    }
 }
