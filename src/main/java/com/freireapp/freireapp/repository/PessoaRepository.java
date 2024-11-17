@@ -1,12 +1,11 @@
-package com.freireapp.freireapp.pessoa;
+package com.freireapp.freireapp.repository;
 
+import com.freireapp.freireapp.pessoa.Pessoa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -82,9 +81,6 @@ public class PessoaRepository {
             return null;
         }
     }
-<<<<<<< Updated upstream:src/main/java/com/freireapp/freireapp/pessoa/PessoaRepository.java
-=======
-
     public List<Map<String, Object>> getListaProfessores() {
         String sql = "SELECT p.nome, p2.especializacao FROM Pessoa p JOIN Professor p2 ON p.id_pessoa = p2.fk_Pessoa_id_pessoa";
         return jdbcTemplate.queryForList(sql);
@@ -94,5 +90,4 @@ public class PessoaRepository {
         String sql = "SELECT p.id_pessoa FROM Pessoa p WHERE p.email = ?";
         return jdbcTemplate.queryForMap(sql,email);
     }
->>>>>>> Stashed changes:src/main/java/com/freireapp/freireapp/repository/PessoaRepository.java
 }

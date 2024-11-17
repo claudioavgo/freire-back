@@ -1,6 +1,7 @@
 package com.freireapp.freireapp.controller;
 
 import com.freireapp.freireapp.dto.RegistroFaltasDTO;
+import com.freireapp.freireapp.service.PessoaService;
 import com.freireapp.freireapp.service.PresencaService;
 import com.freireapp.freireapp.service.ProfessorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/professores")
@@ -17,26 +20,21 @@ public class ProfessorController {
 
     @Autowired
     private PresencaService presencaService;
-<<<<<<< Updated upstream
-=======
     @Autowired
     private ProfessorService professorService;
     @Autowired
     private PessoaService pessoaService;
 
-    @GetMapping()
+    /*@GetMapping()
     public List<Map<String, Object>> listarProfessores() {
-        return presencaService.listarProfessores();
-    }
->>>>>>> Stashed changes
+        return professorService.listarProfessores();
+    }*/
 
     @PostMapping("/chamada")
     public ResponseEntity<String> registrarFaltas(@RequestBody RegistroFaltasDTO registroFaltas) {
         presencaService.registrarChamada(registroFaltas);
         return ResponseEntity.ok("Faltas registradas com sucesso.");
     }
-<<<<<<< Updated upstream
-=======
 
     @GetMapping("/{id}/qtd-alunos")
     public Map<String, Object> ListarQuantidadeDeAlunos(@PathVariable Long id) {
@@ -58,5 +56,4 @@ public class ProfessorController {
         return ResponseEntity.status(201).body("Boa");
     }
 
->>>>>>> Stashed changes
 }

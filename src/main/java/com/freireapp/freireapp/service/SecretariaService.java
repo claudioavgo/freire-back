@@ -1,8 +1,8 @@
 package com.freireapp.freireapp.service;
 
 import com.freireapp.freireapp.dto.CadastroDTO;
-import com.freireapp.freireapp.pessoa.PessoaRepository;
-import com.freireapp.freireapp.secretaria.SecretariaRepository;
+import com.freireapp.freireapp.repository.PessoaRepository;
+import com.freireapp.freireapp.repository.SecretariaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

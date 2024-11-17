@@ -1,7 +1,7 @@
 package com.freireapp.freireapp.service;
 
 import com.freireapp.freireapp.pessoa.Pessoa;
-import com.freireapp.freireapp.pessoa.PessoaRepository;
+import com.freireapp.freireapp.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,6 @@ public class PessoaService {
         for (Map<String, Object> pessoa : todasPessoas) {
             int pessoaId = (int) pessoa.getOrDefault("id_pessoa", -1);
             if (pessoaId == -1) {
-                System.out.println("ID da pessoa não encontrado: " + pessoa);
                 pessoa.put("tipo", "Não especificado");
                 continue;
             }
