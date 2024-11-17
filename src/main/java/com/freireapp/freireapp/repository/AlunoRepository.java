@@ -20,7 +20,7 @@ public class AlunoRepository {
                 "JOIN Disciplina d ON a.fk_Disciplina_id_disciplina = d.id_disciplina\n" +
                 "WHERE pr.fk_Aluno_fk_Pessoa_id_pessoa = ? AND d.id_disciplina = ?";
         return jdbcTemplate.queryForMap(sql, idAluno, idDisciplina);
-    } 
+    }
 
     public List<Map<String, Object>> getTodasProvas(Long id) {
         String sql = "SELECT d.id_disciplina ,d.nome, a.descricao, ra.nota,ra.feedback, a.`data` \n" +
@@ -119,7 +119,7 @@ public class AlunoRepository {
     }
 
     public Map<String, Object> getMediaTotal(Long idAluno) {
-        String sql = "SELECT AVG(nota) AS media_rendimento\n" +
+        String sql = "SELECT AVG(nota) AS rendimento\n" +
                 "FROM ResultadoAvaliacao\n" +
                 "WHERE fk_Aluno_fk_Pessoa_id_pessoa = ?";
         return jdbcTemplate.queryForMap(sql, idAluno);

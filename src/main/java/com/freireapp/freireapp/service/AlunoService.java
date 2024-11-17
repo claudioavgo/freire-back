@@ -48,10 +48,9 @@ public class AlunoService {
     }
 
     public List<Map<String, Object>> todasNotas(Long id) {
-        Map<String, Object> media = alunoRepository.getMediaTotal(id);
-        List<Map<String, Object>> todasProvas = alunoRepository.getTodasProvas(id);
-        todasProvas.add(media);
-
-        return todasProvas;
+        return alunoRepository.getTodasProvas(id);
+    }
+    public Map<String, Object> mediaGeral(Long id) {
+        return alunoRepository.getMediaTotal(id);
     }
 }
