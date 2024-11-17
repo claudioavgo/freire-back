@@ -9,6 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -102,5 +103,109 @@ public class ProfessorRepository {
                 "WHERE p.fk_Pessoa_id_pessoa = ?\n" +
                 "GROUP BY d.id_disciplina, d.nome";
         return jdbcTemplate.queryForList(sql, id);
+    }
+
+    public List<Map<String, Object>> getAlunosPorDisciplina(Long idDisciplina) {
+        String sql = "SELECT " +
+                "    p.nome AS nome_aluno, " +
+                "    a.fk_Pessoa_id_pessoa AS id_aluno, " +
+                "    a.periodo AS periodo_aluno " +
+                "FROM " +
+                "    Matriculado m " +
+                "JOIN " +
+                "    Aluno a ON a.fk_Pessoa_id_pessoa = m.fk_Aluno_fk_Pessoa_id_pessoa " +
+                "JOIN " +
+                "    Pessoa p ON p.id_pessoa = a.fk_Pessoa_id_pessoa " +
+                "WHERE " +
+                "    m.fk_Disciplina_id_disciplina = ?";
+
+        return jdbcTemplate.queryForList(sql, idDisciplina);
+    }
+
+
+    public List<Map<String, Object>> listarNotasDisciplinas(Long idProfessor, Long idDisciplina) {
+        String sql = "SELECT " +
+                "    p_aluno.nome AS aluno, " +
+                "    d.nome AS disciplina, " +
+                "    ra.nota AS nota " +
+                "FROM " +
+                "    Disciplina d " +
+                "JOIN " +
+                "    Matriculado m ON m.fk_Disciplina_id_disciplina = d.id_disciplina " +
+                "JOIN " +
+                "    Aluno al ON al.fk_Pessoa_id_pessoa = m.fk_Aluno_fk_Pessoa_id_pessoa " +
+                "JOIN " +
+                "    Pessoa p_aluno ON p_aluno.id_pessoa = al.fk_Pessoa_id_pessoa " +
+                "LEFT JOIN " +
+                "    ResultadoAvaliacao ra ON ra.fk_Aluno_fk_Pessoa_id_pessoa = al.fk_Pessoa_id_pessoa " +
+                "                         AND ra.fk_Avaliacao_id_avaliacao IN ( " +
+                "                             SELECT id_avaliacao " +
+                "                             FROM Avaliacao " +
+                "                             WHERE Avaliacao.fk_Disciplina_id_disciplina = d.id_disciplina " +
+                "                         ) " +
+                "WHERE " +
+                "    d.fk_Professor_fk_Pessoa_id_pessoa = ? " +
+                "    AND d.id_disciplina = ? " +
+                "ORDER BY " +
+                "    p_aluno.nome";
+
+        List<Map<String, Object>> results = jdbcTemplate.queryForList(sql, idProfessor, idDisciplina);
+
+        Map<String, Map<String, Object>> groupedResults = new LinkedHashMap<>();
+        for (Map<String, Object> row : results) {
+            String aluno = (String) row.get("aluno");
+            String disciplina = (String) row.get("disciplina");
+            Double nota = row.get("nota") != null ? ((Number) row.get("nota")).doubleValue() : null;
+
+            if (!groupedResults.containsKey(aluno)) {
+                Map<String, Object> alunoData = new LinkedHashMap<>();
+                alunoData.put("aluno", aluno);
+                alunoData.put("disciplina", disciplina);
+                alunoData.put("notas", new ArrayList<Double>());
+                groupedResults.put(aluno, alunoData);
+            }
+
+            if (nota != null) {
+                @SuppressWarnings("unchecked")
+                List<Double> notasList = (List<Double>) groupedResults.get(aluno).get("notas");
+                notasList.add(Math.round(nota * 10.0) / 10.0);
+            }
+        }
+
+        return new ArrayList<>(groupedResults.values());
+    };
+
+    public List<Map<String, Object>> listarAvaliacao(Long id) {
+        String sql = "SELECT \n" +
+                "    d.nome AS disciplina,\n" +
+                "    a.id_avaliacao,\n" +
+                "    a.descricao,\n" +
+                "    a.data \n" +
+                "FROM \n" +
+                "    Avaliacao a\n" +
+                "JOIN \n" +
+                "    Disciplina d ON a.fk_Disciplina_id_disciplina = d.id_disciplina\n" +
+                "WHERE d.id_disciplina = ?\n" +
+                "ORDER BY \n" +
+                "    d.nome, a.data";
+        return jdbcTemplate.queryForList(sql, id);
+    }
+
+    public List<Map<String, Object>> getResultadosPorAvaliacao(Long idAvaliacao) {
+        String sql = "SELECT " +
+                "    p.nome AS nome_aluno, " +
+                "    a.fk_Pessoa_id_pessoa AS id_aluno, " +
+                "    ra.nota AS nota, " +
+                "    ra.feedback AS feedback " +
+                "FROM " +
+                "    ResultadoAvaliacao ra " +
+                "JOIN " +
+                "    Aluno a ON ra.fk_Aluno_fk_Pessoa_id_pessoa = a.fk_Pessoa_id_pessoa " +
+                "JOIN " +
+                "    Pessoa p ON p.id_pessoa = a.fk_Pessoa_id_pessoa " +
+                "WHERE " +
+                "    ra.fk_Avaliacao_id_avaliacao = ?";
+
+        return jdbcTemplate.queryForList(sql, idAvaliacao);
     }
 }

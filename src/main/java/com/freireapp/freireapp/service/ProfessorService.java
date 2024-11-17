@@ -6,6 +6,8 @@ import com.freireapp.freireapp.repository.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -42,4 +44,21 @@ public class ProfessorService {
     public List<Map<String, Object>> listarDisciplinas(Long id) {
         return professorRepository.listarDisciplinas(id);
     }
+
+    public List<Map<String, Object>> listarAlunosPorDisciplina(Long idDisciplina) {
+        return professorRepository.getAlunosPorDisciplina(idDisciplina);
+    }
+
+    public List<Map<String, Object>> listarNotasDisciplinas (@PathVariable Long idProfessor, @PathVariable Long idDisciplina) {
+        return professorRepository.listarNotasDisciplinas(idProfessor, idDisciplina);
+    }
+
+    public List<Map<String, Object>> listarAvaliacao (@PathVariable Long id){
+        return professorRepository.listarAvaliacao(id);
+    }
+
+    public List<Map<String, Object>> listarResultadosPorAvaliacao(Long idAvaliacao) {
+        return professorRepository.getResultadosPorAvaliacao(idAvaliacao);
+    }
+
 }

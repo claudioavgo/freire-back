@@ -1,5 +1,6 @@
 package com.freireapp.freireapp.controller;
 
+import com.freireapp.freireapp.dto.AvaliacaoDTO;
 import com.freireapp.freireapp.dto.NotasAvaliacaoDTO;
 import com.freireapp.freireapp.dto.RegistroFaltasDTO;
 import com.freireapp.freireapp.service.PessoaService;
@@ -7,6 +8,7 @@ import com.freireapp.freireapp.service.PresencaService;
 import com.freireapp.freireapp.service.ProfessorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +35,12 @@ public class ProfessorController {
 
     @PostMapping("/chamada")
     public ResponseEntity<String> registrarFaltas(@RequestBody RegistroFaltasDTO registroFaltas) {
-        presencaService.registrarChamada(registroFaltas);
-        return ResponseEntity.status(200).body("Faltas registradas com sucesso.");
+        try {
+            presencaService.registrarChamada(registroFaltas);
+            return ResponseEntity.status(200).body("Faltas registradas com sucesso.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao registrar as faltas.");
+        }
     }
 
     @GetMapping("/{id}/qtd-alunos")
@@ -48,13 +54,15 @@ public class ProfessorController {
     }
 
     @PostMapping("/disciplina/{id}/avaliacao")
-    public ResponseEntity<String> criarAvaliacao(@PathVariable Long id, @RequestBody Map<String, Object> avaliacaoData) {
-        String descricao = (String) avaliacaoData.get("descricao");
-        LocalDate data = LocalDate.parse((String) avaliacaoData.get("data"));
-
-        professorService.criarAvaliacao(id, descricao, data);
-
-        return ResponseEntity.status(201).body("Avaliação criada com sucesso.");
+    public ResponseEntity<String> criarAvaliacao(@PathVariable Long id, @RequestBody AvaliacaoDTO dataAvaliacao) {
+        try {
+            String descricao = dataAvaliacao.descricao();
+            LocalDate data = dataAvaliacao.data();
+            professorService.criarAvaliacao(id, descricao, data);
+            return ResponseEntity.status(201).body("Avaliação criada com sucesso.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar a avaliação: " + e.getMessage());
+        }
     }
 
     @PostMapping("/avaliacao")
@@ -66,4 +74,28 @@ public class ProfessorController {
     public List<Map<String, Object>> listarDisciplinas (@PathVariable Long id) {
         return professorService.listarDisciplinas(id);
     }
+
+    @GetMapping("{idProfessor}/avaliacao/{idDisciplina}")
+    public List<Map<String, Object>> listarNotasDisciplinas (@PathVariable Long idProfessor, @PathVariable Long idDisciplina) {
+        return professorService.listarNotasDisciplinas(idProfessor, idDisciplina);
+    }
+
+    @GetMapping("/disciplina/{id}/alunos")
+    public List<Map<String, Object>> listarAlunosPorDisciplina(@PathVariable Long id){
+        return professorService.listarAlunosPorDisciplina(id);
+    }
+
+    @GetMapping("/disciplina/{id}")
+    public List<Map<String, Object>> listarAvaliacao (@PathVariable Long id){
+        return professorService.listarAvaliacao(id);
+    }
+
+    @GetMapping("/avaliacao/{id}/resultados")
+    public List<Map<String, Object>> listarResultadosPorAvaliacao(@PathVariable Long id) {
+        return professorService.listarResultadosPorAvaliacao(id);
+    }
+
+
 }
+
+
