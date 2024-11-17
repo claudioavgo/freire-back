@@ -1,6 +1,6 @@
 package com.freireapp.freireapp.controller;
 
-import  com.freireapp.freireapp.service.AlunoService;
+import com.freireapp.freireapp.service.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,20 +20,22 @@ public class AlunoController {
     }
 
     @GetMapping("/{id}/avaliacao")
-    public List<Map<String,Object>> todasNotas(@PathVariable Long id) {
+    public List<Map<String, Object>> todasNotas(@PathVariable Long id) {
         return alunoService.todasNotas(id);
-      
+    }
+
     @GetMapping("/{id}/rendimento")
-    public Map<String, Object> mediaGeral (@PathVariable Long id) {
+    public Map<String, Object> mediaGeral(@PathVariable Long id) {
         return alunoService.mediaGeral(id);
     }
+
     @GetMapping("/{idAluno}/avaliacao/{idDisciplina}")
-    public List<Map<String,Object>> notasAluno(@PathVariable Long idAluno, @PathVariable Long idDisciplina) {
+    public List<Map<String, Object>> notasAluno(@PathVariable Long idAluno, @PathVariable Long idDisciplina) {
         return alunoService.notasAluno(idAluno, idDisciplina);
     }
 
     @GetMapping("/{id}/disciplinas")
-    public List<Map<String,Object>> ListarDisciplina(@PathVariable Long id) {
+    public List<Map<String, Object>> ListarDisciplinas(@PathVariable Long id) {
         return alunoService.ListarDisciplinas(id);
     }
 

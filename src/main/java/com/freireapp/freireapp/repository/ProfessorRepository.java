@@ -1,18 +1,16 @@
 package com.freireapp.freireapp.repository;
 
 import com.freireapp.freireapp.dto.NotasAvaliacaoDTO;
-import com.freireapp.freireapp.pessoa.Pessoa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.time.LocalDate;
 
 @Repository
 public class ProfessorRepository {
@@ -31,7 +29,7 @@ public class ProfessorRepository {
     public List<Map<String, Object>> getAlunosInformacoes(Long idProfessor) {
         String sql = "SELECT " +
                 "    d.nome AS disciplina, " +
-                "    p_aluno.nome AS aluno, " +
+                "    p_aluno.nome AS aluno " + // Removed the trailing comma
                 "FROM " +
                 "    Disciplina d " +
                 "JOIN " +
@@ -53,11 +51,7 @@ public class ProfessorRepository {
                 "WHERE " +
                 "    d.fk_Professor_fk_Pessoa_id_pessoa = ? " +
                 "GROUP BY " +
-                " d.nome, p_aluno.nome";
-
-        return jdbcTemplate.queryForList(sql, idProfessor);
-    }
-
+                "    d.nome, p_aluno.nome";
 
         List<Map<String, Object>> results = jdbcTemplate.queryForList(sql, idProfessor);
 
@@ -67,7 +61,12 @@ public class ProfessorRepository {
                 String[] notasArray = notas.split(", ");
                 List<Double> notasNumericas = new ArrayList<>();
                 for (String nota : notasArray) {
-                    notasNumericas.add(Double.valueOf(nota));
+                    try {
+                        notasNumericas.add(Double.valueOf(nota));
+                    } catch (NumberFormatException e) {
+                        // Handle parsing error if needed
+                        notasNumericas.add(0.0); // Add a default value or handle accordingly
+                    }
                 }
                 row.put("notas", notasNumericas);
             } else {
@@ -79,19 +78,17 @@ public class ProfessorRepository {
 
     public void criarAvaliacao(Long idDisciplina, String descricao, LocalDate data) {
         String sql = "INSERT INTO Avaliacao (descricao, data, fk_Disciplina_id_disciplina) VALUES (?, ?, ?)";
-
         int rowsAffected = jdbcTemplate.update(sql, descricao, data, idDisciplina);
 
         if (rowsAffected == 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erro");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erro ao criar avaliação");
         }
     }
 
     public void inserirResultadoAvaliacao(NotasAvaliacaoDTO data) {
-        String sql = "INSERT INTO ResultadoAvaliacao\n" +
-                "(fk_Aluno_fk_Pessoa_id_pessoa, fk_Professor_fk_Pessoa_id_pessoa, fk_Avaliacao_id_avaliacao, nota, feedback)\n" +
-                "VALUES(?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO ResultadoAvaliacao " +
+                "(fk_Aluno_fk_Pessoa_id_pessoa, fk_Professor_fk_Pessoa_id_pessoa, fk_Avaliacao_id_avaliacao, nota, feedback) " +
+                "VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql, data.idAluno(), data.idProfessor(), data.idAvaliacao(), data.nota(), data.feedback());
     }
-
 }

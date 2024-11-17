@@ -30,7 +30,7 @@ public class SecretariaRepository {
                 data.telefone2(),
                 data.email(),
                 data.senha(),
-                data.dataNascimento
+                data.dataNascimento()
         );
     }
 
