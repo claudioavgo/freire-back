@@ -75,7 +75,6 @@ public class ProfessorRepository {
         return results;
     }
 
-
     public void inserirAvaliacao(Long idDisciplina, String descricao, LocalDate data) {
         String sql = "INSERT INTO Avaliacao (descricao, data, fk_Disciplina_id_disciplina) VALUES (?, ?, ?)";
 
