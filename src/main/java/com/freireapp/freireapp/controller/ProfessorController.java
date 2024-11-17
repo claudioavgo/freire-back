@@ -54,7 +54,7 @@ public class ProfessorController {
 
         professorService.criarAvaliacao(id, descricao, data);
 
-        return ResponseEntity.status(201).body("Boa");
+        return ResponseEntity.status(201).body("Avaliação criada com sucesso.");
     }
 
     @PostMapping("/avaliacao")
