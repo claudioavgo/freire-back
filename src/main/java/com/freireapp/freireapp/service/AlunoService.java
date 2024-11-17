@@ -1,6 +1,6 @@
 package com.freireapp.freireapp.service;
 
-import com.freireapp.freireapp.aluno.AlunoRepository;
+import com.freireapp.freireapp.repository.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +17,16 @@ public class AlunoService {
     @Autowired
     private AlunoRepository alunoRepository;
 
-    public List<Map<String, Object>> quantidadeFaltas(Long id) {
-        return alunoRepository.getQuantidadeFaltas(id);
+    public Map<String, Object> quantidadeFaltas(Long idAluno, Long idDisciplina) {
+        return alunoRepository.getQuantidadeFaltas(idAluno, idDisciplina);
     }
 
-    public List<Map<String, Object>> notasAluno(Long id) {
-        return alunoRepository.getResultadoAvaliacao(id);
+    public List<Map<String, Object>> notasAluno(Long idAluno, Long idDisciplina) {
+        return alunoRepository.getResultadoAvaliacao(idAluno, idDisciplina);
     }
 
-    public List<Map<String, Object>> ListarCadeiras(Long id) {
-        return alunoRepository.getTodasCadeiras(id);
+    public List<Map<String, Object>> ListarDisciplinas(Long id) {
+        return alunoRepository.getTodasDisciplinas(id);
     }
 
     public List<Map<String,Object>> ListarAulasDoDia(Long id) {
@@ -35,5 +35,24 @@ public class AlunoService {
 
         System.out.println(diaSemana);
         return alunoRepository.getAulasDoDia(id, diaSemana);
+    }
+
+    public List<Map<String,Object>> ListarAulas(Long id){
+        return alunoRepository.getAulas(id);
+    }
+
+    public Map<String,Object> Streak(Long id){
+        return alunoRepository.getStreak(id);
+    }
+
+    public List<Map<String,Object>> Financeiro(Long id){
+        return alunoRepository.getPagamentos(id);
+    }
+
+    public List<Map<String, Object>> todasNotas(Long id) {
+        return alunoRepository.getTodasProvas(id);
+    }
+    public Map<String, Object> mediaGeral(Long id) {
+        return alunoRepository.getMediaTotal(id);
     }
 }

@@ -18,6 +18,7 @@ public class PessoaRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+
     public List<Map<String, Object>> getAllPessoas() {
         String sql = "SELECT * FROM Pessoa";
         return jdbcTemplate.queryForList(sql);
@@ -46,6 +47,24 @@ public class PessoaRepository {
         }
     }
 
+    public boolean eProfessor(int id) {
+        try {
+            String sql = "SELECT * FROM Professor WHERE fk_Pessoa_id_pessoa = ?";
+            return !jdbcTemplate.queryForMap(sql,id).isEmpty();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean eSecretaria(int id) {
+        try {
+            String sql = "SELECT * FROM Secretaria WHERE fk_Pessoa_id_pessoa = ?";
+            return !jdbcTemplate.queryForMap(sql, id).isEmpty();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public Map<String, Object> getPessoaByEmail(String email) {
         String sql = "SELECT * FROM Pessoa WHERE email = ?";
         try {
@@ -63,4 +82,17 @@ public class PessoaRepository {
             return null;
         }
     }
+<<<<<<< Updated upstream:src/main/java/com/freireapp/freireapp/pessoa/PessoaRepository.java
+=======
+
+    public List<Map<String, Object>> getListaProfessores() {
+        String sql = "SELECT p.nome, p2.especializacao FROM Pessoa p JOIN Professor p2 ON p.id_pessoa = p2.fk_Pessoa_id_pessoa";
+        return jdbcTemplate.queryForList(sql);
+    }
+
+    public Map<String, Object> getIdByEmail(String email) {
+        String sql = "SELECT p.id_pessoa FROM Pessoa p WHERE p.email = ?";
+        return jdbcTemplate.queryForMap(sql,email);
+    }
+>>>>>>> Stashed changes:src/main/java/com/freireapp/freireapp/repository/PessoaRepository.java
 }

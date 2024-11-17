@@ -29,6 +29,13 @@ public class SecretariaService {
             }
         }
         secretariaRepository.cadastrarPessoa(data);
+        if(data.tipo() == 0) {
+            secretariaRepository.cadastrarAluno(data);
+        } else if (data.tipo() == 1) {
+            secretariaRepository.cadastrarProfessor(data);
+        } else if (data.tipo() == 2 ) {
+            secretariaRepository.cadastrarSecretaria(data);
+        }
         return ResponseEntity.status(200).body("Usuário cadastrado com sucesso!");
     }
 }

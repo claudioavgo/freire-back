@@ -17,7 +17,35 @@ public class PessoaService {
     private PessoaRepository pessoaRepository;
 
     public List<Map<String, Object>> listarTodasPessoas() {
-        return pessoaRepository.getAllPessoas();
+        List<Map<String, Object>> todasPessoas = pessoaRepository.getAllPessoas();
+
+        for (Map<String, Object> pessoa : todasPessoas) {
+            int pessoaId = (int) pessoa.getOrDefault("id_pessoa", -1);
+            if (pessoaId == -1) {
+                System.out.println("ID da pessoa não encontrado: " + pessoa);
+                pessoa.put("tipo", "Não especificado");
+                continue;
+            }
+
+            boolean isAluno = pessoaRepository.eAluno(pessoaId);
+            boolean isProfessor = pessoaRepository.eProfessor(pessoaId);
+            boolean isSecretaria = pessoaRepository.eSecretaria(pessoaId);
+
+            String tipoPessoa = "Não especificado";
+            if (isAluno) {
+                tipoPessoa = "Aluno";
+            } else if (isProfessor) {
+                tipoPessoa = "Professor";
+            } else if (isSecretaria) {
+                tipoPessoa = "Secretaria";
+            }
+
+            pessoa.put("tipo", tipoPessoa);
+
+            System.out.println("Pessoa ID: " + pessoaId + ", Tipo: " + tipoPessoa);
+        }
+
+        return todasPessoas;
     }
 
     public Map<String, Object> buscarPessoaPorId(Long id) {
