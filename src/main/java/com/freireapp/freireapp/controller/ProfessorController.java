@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/professores")
+@RequestMapping("/api/professor")
 @CrossOrigin(origins = "*")
 public class ProfessorController {
 

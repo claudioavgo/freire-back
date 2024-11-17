@@ -46,6 +46,24 @@ public class PessoaRepository {
         }
     }
 
+    public boolean eProfessor(int id) {
+        try {
+            String sql = "SELECT * FROM Professor WHERE fk_Pessoa_id_pessoa = ?";
+            return !jdbcTemplate.queryForMap(sql,id).isEmpty();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean eSecretaria(int id) {
+        try {
+            String sql = "SELECT * FROM Secretaria WHERE fk_Pessoa_id_pessoa = ?";
+            return !jdbcTemplate.queryForMap(sql, id).isEmpty();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public Map<String, Object> getPessoaByEmail(String email) {
         String sql = "SELECT * FROM Pessoa WHERE email = ?";
         try {
