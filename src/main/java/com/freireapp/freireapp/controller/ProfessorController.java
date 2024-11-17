@@ -63,7 +63,7 @@ public class ProfessorController {
     }
 
     @GetMapping("/{id}/disciplina")
-    public Map<String, Object> listarDisciplinas (@PathVariable Long id) {
+    public List<Map<String, Object>> listarDisciplinas (@PathVariable Long id) {
         return professorService.listarDisciplinas(id);
     }
 }

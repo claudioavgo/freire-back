@@ -39,7 +39,7 @@ public class ProfessorService {
         return ResponseEntity.status(200).body("Resultado inserido com sucesso.");
     }
 
-    public Map<String, Object> listarDisciplinas(Long id) {
+    public List<Map<String, Object>> listarDisciplinas(Long id) {
         return professorRepository.listarDisciplinas(id);
     }
 }
