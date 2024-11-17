@@ -55,7 +55,28 @@ public class ProfessorRepository {
                 "GROUP BY " +
                 "    d.nome, p_aluno.nome";
 
-        return jdbcTemplate.queryForList(sql, idProfessor);
+        List<Map<String, Object>> results = jdbcTemplate.queryForList(sql, idProfessor);
+
+        for (Map<String, Object> row : results) {
+            String notas = (String) row.get("notas");
+            if (notas != null) {
+                String[] notasArray = notas.split(", ");
+                if (notasArray.length > 0) {
+                    row.put("notas", Double.valueOf(notasArray[0]));
+                } else {
+                    row.put("notas", null);
+                }
+                if (notasArray.length > 1) {
+                    row.put("notas2", Double.valueOf(notasArray[1]));
+                } else {
+                    row.put("notas2", null);
+                }
+            } else {
+                row.put("notas", null);
+                row.put("notas2", null);
+            }
+        }
+        return results;
     }
 
 
