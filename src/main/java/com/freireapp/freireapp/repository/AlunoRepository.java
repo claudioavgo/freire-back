@@ -83,7 +83,7 @@ public class AlunoRepository {
         return jdbcTemplate.queryForList(sql, id);
     }
 
-    public List<Map<String, Object>> getStreak(Long idAluno) {
+    public Map<String, Object> getStreak(Long idAluno) {
         String sql = "WITH PresencasOrdenadas AS ( " +
                 "    SELECT pr.data, " +
                 "           pr.status, " +
@@ -91,24 +91,26 @@ public class AlunoRepository {
                 "    FROM Presenca pr " +
                 "    WHERE pr.fk_Aluno_fk_Pessoa_id_pessoa = ? " +
                 "), " +
-                "Streaks AS ( " +
-                "    SELECT po1.data AS inicio_streak, " +
-                "           MAX(po2.data) AS fim_streak, " +
-                "           COUNT(*) AS streak " +
-                "    FROM PresencasOrdenadas po1 " +
-                "    JOIN PresencasOrdenadas po2 " +
-                "      ON po2.rn >= po1.rn " +
-                "     AND po2.status = 1 " +
-                "     AND DATEDIFF(po2.data, po1.data) = (po2.rn - po1.rn) " +
-                "    WHERE po1.status = 1 " +
-                "    GROUP BY po1.data " +
-                "    HAVING streak > 1 " +
+                "StreakAtual AS ( " +
+                "    SELECT COUNT(*) AS streak_atual " +
+                "    FROM ( " +
+                "        SELECT *, " +
+                "               SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END) OVER (ORDER BY data) AS grupo " +
+                "        FROM PresencasOrdenadas " +
+                "    ) SubPresencas " +
+                "    WHERE status = 1 " +
+                "      AND grupo = ( " +
+                "          SELECT MAX(grupo) " +
+                "          FROM ( " +
+                "              SELECT SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END) OVER (ORDER BY data) AS grupo " +
+                "              FROM PresencasOrdenadas " +
+                "          ) Temp " +
+                "      ) " +
                 ") " +
-                "SELECT inicio_streak, fim_streak, streak " +
-                "FROM Streaks";
-        return jdbcTemplate.queryForList(sql, idAluno);
+                "SELECT streak_atual " +
+                "FROM StreakAtual";
+        return jdbcTemplate.queryForMap(sql, idAluno);
     }
-
 
     public List<Map<String, Object>> getPagamentos(Long idAluno) {
         String sql = "SELECT pg.id_pagamento, pg.data_pagamento, pg.valor, pg.status \n" +
@@ -118,6 +120,13 @@ public class AlunoRepository {
                 "JOIN Pessoa p ON a.fk_Pessoa_id_pessoa = p.id_pessoa\n" +
                 "WHERE p.id_pessoa = ?";
         return jdbcTemplate.queryForList(sql, idAluno);
+    }
+
+    public Map<String, Object> getMediaTotal(Long idAluno) {
+        String sql = "SELECT AVG(nota) AS media_rendimento\n" +
+                "FROM ResultadoAvaliacao\n" +
+                "WHERE fk_Aluno_fk_Pessoa_id_pessoa = ?";
+        return jdbcTemplate.queryForMap(sql, idAluno);
     }
 
 

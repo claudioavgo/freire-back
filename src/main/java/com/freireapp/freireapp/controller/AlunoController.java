@@ -45,7 +45,7 @@ public class AlunoController {
     }
 
     @GetMapping("{id}/streak")
-    public List<Map<String, Object>> Streak(@PathVariable Long id) {
+    public Map<String, Object> Streak(@PathVariable Long id) {
         return alunoService.Streak(id);
     }
 

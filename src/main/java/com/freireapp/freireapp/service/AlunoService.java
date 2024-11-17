@@ -39,7 +39,7 @@ public class AlunoService {
         return alunoRepository.getAulas(id);
     }
 
-    public List<Map<String,Object>> Streak(Long id){
+    public Map<String,Object> Streak(Long id){
         return alunoRepository.getStreak(id);
     }
 
@@ -48,6 +48,10 @@ public class AlunoService {
     }
 
     public List<Map<String, Object>> todasNotas(Long id) {
-        return alunoRepository.getTodasProvas(id);
+        Map<String, Object> media = alunoRepository.getMediaTotal(id);
+        List<Map<String, Object>> todasProvas = alunoRepository.getTodasProvas(id);
+        todasProvas.add(media);
+
+        return todasProvas;
     }
 }
