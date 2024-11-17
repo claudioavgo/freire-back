@@ -20,8 +20,9 @@ public class PresencaService {
 
     public void registrarChamada(RegistroFaltasDTO registroFaltas) {
         LocalDate data = LocalDate.now();
+        Long idProfessor = registroFaltas.idProfessor();
         for (RegistroFaltasDTO.FaltaDTO falta : registroFaltas.faltas()) {
-            presencaRepository.registrarChamada(falta.idPessoa(), falta.status(), data);
+            presencaRepository.registrarChamada(falta.idPessoa(), falta.status(), data, idProfessor);
         }
     }
 

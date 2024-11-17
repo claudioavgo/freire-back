@@ -1,8 +1,10 @@
 package com.freireapp.freireapp.service;
 
+import com.freireapp.freireapp.dto.NotasAvaliacaoDTO;
 import com.freireapp.freireapp.repository.AlunoRepository;
 import com.freireapp.freireapp.repository.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -28,6 +30,11 @@ public class ProfessorService {
     }
 
     public void criarAvaliacao(Long idDisciplina, String descricao, LocalDate data) {
-        professorRepository.inserirAvaliacao(idDisciplina, descricao, data);
+        professorRepository.criarAvaliacao(idDisciplina, descricao, data);
+    }
+
+    public ResponseEntity notasAvaliacao(NotasAvaliacaoDTO data){
+        professorRepository.inserirResultadoAvaliacao(data);
+        return ResponseEntity.status(200).body("Resultado inserido com sucesso.");
     }
 }

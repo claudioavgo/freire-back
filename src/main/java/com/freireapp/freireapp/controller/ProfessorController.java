@@ -1,5 +1,6 @@
 package com.freireapp.freireapp.controller;
 
+import com.freireapp.freireapp.dto.NotasAvaliacaoDTO;
 import com.freireapp.freireapp.dto.RegistroFaltasDTO;
 import com.freireapp.freireapp.service.PessoaService;
 import com.freireapp.freireapp.service.PresencaService;
@@ -56,4 +57,8 @@ public class ProfessorController {
         return ResponseEntity.status(201).body("Boa");
     }
 
+    @PostMapping("/avaliacao")
+    public ResponseEntity notasAvaliacao(@RequestBody NotasAvaliacaoDTO data) {
+        return ResponseEntity.status(200).body(professorService.notasAvaliacao(data));
+    }
 }
