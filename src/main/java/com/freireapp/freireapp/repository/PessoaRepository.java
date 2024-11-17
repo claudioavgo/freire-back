@@ -23,7 +23,7 @@ public class PessoaRepository {
         return jdbcTemplate.queryForList(sql);
     }
 
-    public Map<String, Object> getPessoaIdByEmail(Long id) {
+    public Map<String, Object> getPessoaById(Long id) {
         String sql = "SELECT * FROM Pessoa WHERE id_pessoa = ?";
         return jdbcTemplate.queryForMap(sql, id);
     }

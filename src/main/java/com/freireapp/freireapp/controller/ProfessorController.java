@@ -53,7 +53,7 @@ public class ProfessorController {
 
         professorService.criarAvaliacao(id, descricao, data);
 
-        return ResponseEntity.status(201).body("V");
+        return ResponseEntity.status(201).body("Boa");
     }
 
 }

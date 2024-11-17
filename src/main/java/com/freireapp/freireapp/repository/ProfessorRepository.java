@@ -64,7 +64,7 @@ public class ProfessorRepository {
         int rowsAffected = jdbcTemplate.update(sql, descricao, data, idDisciplina);
 
         if (rowsAffected == 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erro ao c");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erro");
         }
     }
 
