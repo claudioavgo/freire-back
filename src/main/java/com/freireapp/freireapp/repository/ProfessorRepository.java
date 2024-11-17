@@ -1,8 +1,10 @@
 package com.freireapp.freireapp.repository;
 
+import com.freireapp.freireapp.dto.NotasAvaliacaoDTO;
 import com.freireapp.freireapp.pessoa.Pessoa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -75,7 +77,7 @@ public class ProfessorRepository {
         return results;
     }
 
-    public void inserirAvaliacao(Long idDisciplina, String descricao, LocalDate data) {
+    public void criarAvaliacao(Long idDisciplina, String descricao, LocalDate data) {
         String sql = "INSERT INTO Avaliacao (descricao, data, fk_Disciplina_id_disciplina) VALUES (?, ?, ?)";
 
         int rowsAffected = jdbcTemplate.update(sql, descricao, data, idDisciplina);
@@ -83,6 +85,13 @@ public class ProfessorRepository {
         if (rowsAffected == 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erro");
         }
+    }
+
+    public void inserirResultadoAvaliacao(NotasAvaliacaoDTO data) {
+        String sql = "INSERT INTO ResultadoAvaliacao\n" +
+                "(fk_Aluno_fk_Pessoa_id_pessoa, fk_Professor_fk_Pessoa_id_pessoa, fk_Avaliacao_id_avaliacao, nota, feedback)\n" +
+                "VALUES(?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, data.idAluno(), data.idProfessor(), data.idAvaliacao(), data.nota(), data.feedback());
     }
 
 }
