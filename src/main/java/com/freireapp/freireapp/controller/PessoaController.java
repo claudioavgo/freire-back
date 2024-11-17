@@ -17,7 +17,7 @@ public class PessoaController {
     @Autowired
     private PessoaService pessoaService;
 
-    @GetMapping
+    /*@GetMapping
     public List<Map<String, Object>> listarPessoas() {
         return pessoaService.listarTodasPessoas();
     }
@@ -31,4 +31,5 @@ public class PessoaController {
     public ResponseEntity autenticarPessoa(@RequestBody LoginDTO data) {
         return ResponseEntity.status(200).body(pessoaService.autenticar(data.email(), data.senha()));
     }
+*/
 }

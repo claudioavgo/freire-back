@@ -16,7 +16,7 @@ public class PessoaService {
     @Autowired
     private PessoaRepository pessoaRepository;
 
-    public List<Map<String, Object>> listarTodasPessoas() {
+    /*public List<Map<String, Object>> listarTodasPessoas() {
         return pessoaRepository.getAllPessoas();
     }
 
@@ -38,4 +38,4 @@ public class PessoaService {
 
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuário ou senha incorreto.");
     }
-}
+*/}

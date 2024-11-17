@@ -1,6 +1,6 @@
 package com.freireapp.freireapp.controller;
 
-import com.freireapp.freireapp.service.AlunoService;
+import  com.freireapp.freireapp.service.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

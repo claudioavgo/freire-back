@@ -37,8 +37,23 @@ public class ProfessorController {
     }
 
     @GetMapping("/{id}/qtd-alunos")
-    public List<Map<String, Object>> ListarQuantidadeDeAlunos(@PathVariable Long id) {
+    public Map<String, Object> ListarQuantidadeDeAlunos(@PathVariable Long id) {
         return professorService.ListarQuantidadeDeAlunos(id);
+    }
+
+    @GetMapping("{id}/ver-alunos")
+    public List<Map<String, Object>> VerAlunos(@PathVariable Long id) {
+        return professorService.VerAlunos(id);
+    }
+
+    @PostMapping("/{id}/avaliacoes")
+    public ResponseEntity<String> criarAvaliacao(@PathVariable Long id, @RequestBody Map<String, Object> avaliacaoData) {
+        String descricao = (String) avaliacaoData.get("descricao");
+        LocalDate data = LocalDate.parse((String) avaliacaoData.get("data"));
+
+        professorService.criarAvaliacao(id, descricao, data);
+
+        return ResponseEntity.status(201).body("V");
     }
 
 }

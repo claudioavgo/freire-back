@@ -17,12 +17,13 @@ public class PessoaRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+
     public List<Map<String, Object>> getAllPessoas() {
         String sql = "SELECT * FROM Pessoa";
         return jdbcTemplate.queryForList(sql);
     }
 
-    public Map<String, Object> getPessoaById(Long id) {
+    public Map<String, Object> getPessoaIdByEmail(Long id) {
         String sql = "SELECT * FROM Pessoa WHERE id_pessoa = ?";
         return jdbcTemplate.queryForMap(sql, id);
     }
@@ -66,5 +67,10 @@ public class PessoaRepository {
     public List<Map<String, Object>> getListaProfessores() {
         String sql = "SELECT p.nome, p2.especializacao FROM Pessoa p JOIN Professor p2 ON p.id_pessoa = p2.fk_Pessoa_id_pessoa";
         return jdbcTemplate.queryForList(sql);
+    }
+
+    public Map<String, Object> getIdByEmail(String email) {
+        String sql = "SELECT p.id_pessoa FROM Pessoa p WHERE p.email = ?";
+        return jdbcTemplate.queryForMap(sql,email);
     }
 }

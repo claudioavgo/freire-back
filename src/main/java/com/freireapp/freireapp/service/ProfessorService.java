@@ -19,7 +19,15 @@ public class ProfessorService {
     @Autowired
     private ProfessorRepository professorRepository;
 
-    public List<Map<String,Object>> ListarQuantidadeDeAlunos(Long id){
+    public Map<String,Object> ListarQuantidadeDeAlunos(Long id){
         return professorRepository.getAlunos(id);
+    }
+
+    public List<Map<String, Object>> VerAlunos(Long id){
+        return professorRepository.getAlunosInformacoes(id);
+    }
+
+    public void criarAvaliacao(Long idDisciplina, String descricao, LocalDate data) {
+        professorRepository.inserirAvaliacao(idDisciplina, descricao, data);
     }
 }

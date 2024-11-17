@@ -10,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
+import java.time.LocalDate;
 
 @Repository
 public class ProfessorRepository {
@@ -17,13 +18,54 @@ public class ProfessorRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public List<Map<String, Object>> getAlunos(Long idProfessor) {
-        String sql = "SELECT DISTINCT p.nome AS nome_aluno, p.id_pessoa AS id_aluno, " +
-                "al.matricula, al.indice_rendimento " +
-                "FROM Aula au " +
-                "JOIN Aluno al ON al.fk_Pessoa_id_pessoa = au.fk_Aluno_fk_Pessoa_id_pessoa " +
-                "JOIN Pessoa p ON al.fk_Pessoa_id_pessoa = p.id_pessoa " +
-                "WHERE au.fk_Professor_fk_Pessoa_id_pessoa = ?";
+    public Map<String, Object> getAlunos(Long idProfessor) {
+        String sql = "SELECT COUNT(DISTINCT m.fk_Aluno_fk_Pessoa_id_pessoa) AS quantidade_alunos " +
+                "FROM Disciplina d " +
+                "JOIN Matriculado m ON m.fk_Disciplina_id_disciplina = d.id_disciplina " +
+                "WHERE d.fk_Professor_fk_Pessoa_id_pessoa = ?";
+        return jdbcTemplate.queryForMap(sql, idProfessor);
+    }
+
+    public List<Map<String, Object>> getAlunosInformacoes(Long idProfessor) {
+        String sql = "SELECT " +
+                "    d.nome AS disciplina, " +
+                "    p_aluno.nome AS aluno, " +
+                "    COALESCE(ra.nota, 0) AS nota, " +
+                "    COUNT(CASE WHEN pr.status = 'F' THEN 1 END) AS faltas " +
+                "FROM " +
+                "    Disciplina d " +
+                "JOIN " +
+                "    Matriculado m ON m.fk_Disciplina_id_disciplina = d.id_disciplina " +
+                "JOIN " +
+                "    Aluno al ON al.fk_Pessoa_id_pessoa = m.fk_Aluno_fk_Pessoa_id_pessoa " +
+                "JOIN " +
+                "    Pessoa p_aluno ON p_aluno.id_pessoa = al.fk_Pessoa_id_pessoa " +
+                "LEFT JOIN " +
+                "    ResultadoAvaliacao ra ON ra.fk_Aluno_fk_Pessoa_id_pessoa = al.fk_Pessoa_id_pessoa " +
+                "                         AND ra.fk_Avaliacao_id_avaliacao IN ( " +
+                "                             SELECT id_avaliacao " +
+                "                             FROM Avaliacao " +
+                "                             WHERE Avaliacao.fk_Disciplina_id_disciplina = d.id_disciplina " +
+                "                         ) " +
+                "LEFT JOIN " +
+                "    Presenca pr ON pr.fk_Aluno_fk_Pessoa_id_pessoa = al.fk_Pessoa_id_pessoa " +
+                "              AND pr.fk_Professor_fk_Pessoa_id_pessoa = d.fk_Professor_fk_Pessoa_id_pessoa " +
+                "WHERE " +
+                "    d.fk_Professor_fk_Pessoa_id_pessoa = ? " +
+                "GROUP BY " +
+                "    d.nome, p_aluno.nome, ra.nota";
+
         return jdbcTemplate.queryForList(sql, idProfessor);
     }
+
+    public void inserirAvaliacao(Long idDisciplina, String descricao, LocalDate data) {
+        String sql = "INSERT INTO Avaliacao (descricao, data, fk_Disciplina_id_disciplina) VALUES (?, ?, ?)";
+
+        int rowsAffected = jdbcTemplate.update(sql, descricao, data, idDisciplina);
+
+        if (rowsAffected == 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erro ao c");
+        }
+    }
+
 }
