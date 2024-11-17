@@ -15,7 +15,7 @@ public class AlunoController {
     private AlunoService alunoService;
 
     @GetMapping("/{idAluno}/faltas/{idDisciplina}")
-    public List<Map<String, Object>> quantidadeFaltas(@PathVariable Long idAluno, @PathVariable Long idDisciplina) {
+    public Map<String, Object> quantidadeFaltas(@PathVariable Long idAluno, @PathVariable Long idDisciplina) {
         return alunoService.quantidadeFaltas(idAluno, idDisciplina);
     }
 

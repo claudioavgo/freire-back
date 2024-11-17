@@ -13,14 +13,14 @@ public class AlunoRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public List<Map<String, Object>> getQuantidadeFaltas(Long idAluno, Long idDisciplina) {
+    public Map<String, Object> getQuantidadeFaltas(Long idAluno, Long idDisciplina) {
         String sql = "SELECT d.nome AS disciplina, SUM(CASE WHEN pr.status = 0 THEN 1 ELSE 0 END) AS faltas\n" +
                 "FROM Presenca pr\n" +
                 "JOIN Aula a ON pr.fk_Professor_fk_Pessoa_id_pessoa = a.fk_Professor_fk_Pessoa_id_pessoa\n" +
                 "JOIN Disciplina d ON a.fk_Disciplina_id_disciplina = d.id_disciplina\n" +
                 "WHERE pr.fk_Aluno_fk_Pessoa_id_pessoa = ? AND d.id_disciplina = ?";
-        return jdbcTemplate.queryForList(sql, idAluno, idDisciplina);
-    }
+        return jdbcTemplate.queryForMap(sql, idAluno, idDisciplina);
+    } 
 
     public List<Map<String, Object>> getTodasProvas(Long id) {
         String sql = "SELECT d.id_disciplina ,d.nome, a.descricao, ra.nota,ra.feedback, a.`data` \n" +
