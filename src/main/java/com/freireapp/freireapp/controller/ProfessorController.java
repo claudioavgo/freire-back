@@ -15,6 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/professores")
+  
 @CrossOrigin(origins = "*")
 public class ProfessorController {
 
@@ -59,5 +60,4 @@ public class ProfessorController {
 
         return ResponseEntity.status(201).body("Boa");
     }
-
 }

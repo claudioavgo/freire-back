@@ -2,18 +2,15 @@ package com.freireapp.freireapp.controller;
 
 import  com.freireapp.freireapp.service.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/aluno")
+@CrossOrigin(origins = "*")
 public class AlunoController {
-
     @Autowired
     private AlunoService alunoService;
 
@@ -25,13 +22,11 @@ public class AlunoController {
     @GetMapping("/{id}/avaliacao")
     public List<Map<String,Object>> todasNotas(@PathVariable Long id) {
         return alunoService.todasNotas(id);
-    }
-
+      
     @GetMapping("/{id}/rendimento")
     public Map<String, Object> mediaGeral (@PathVariable Long id) {
         return alunoService.mediaGeral(id);
     }
-
     @GetMapping("/{idAluno}/avaliacao/{idDisciplina}")
     public List<Map<String,Object>> notasAluno(@PathVariable Long idAluno, @PathVariable Long idDisciplina) {
         return alunoService.notasAluno(idAluno, idDisciplina);

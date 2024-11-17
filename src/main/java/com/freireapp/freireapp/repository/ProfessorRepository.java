@@ -1,7 +1,9 @@
 package com.freireapp.freireapp.repository;
 
+import com.freireapp.freireapp.pessoa.Pessoa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
@@ -28,8 +30,6 @@ public class ProfessorRepository {
         String sql = "SELECT " +
                 "    d.nome AS disciplina, " +
                 "    p_aluno.nome AS aluno, " +
-                "    COALESCE(ra.nota, 0) AS nota, " +
-                "    COUNT(CASE WHEN pr.status = 'F' THEN 1 END) AS faltas " +
                 "FROM " +
                 "    Disciplina d " +
                 "JOIN " +
@@ -51,10 +51,30 @@ public class ProfessorRepository {
                 "WHERE " +
                 "    d.fk_Professor_fk_Pessoa_id_pessoa = ? " +
                 "GROUP BY " +
-                "    d.nome, p_aluno.nome, ra.nota";
+                " d.nome, p_aluno.nome";
 
         return jdbcTemplate.queryForList(sql, idProfessor);
     }
+
+
+        List<Map<String, Object>> results = jdbcTemplate.queryForList(sql, idProfessor);
+
+        for (Map<String, Object> row : results) {
+            String notas = (String) row.get("notas");
+            if (notas != null) {
+                String[] notasArray = notas.split(", ");
+                List<Double> notasNumericas = new ArrayList<>();
+                for (String nota : notasArray) {
+                    notasNumericas.add(Double.valueOf(nota));
+                }
+                row.put("notas", notasNumericas);
+            } else {
+                row.put("notas", new ArrayList<>());
+            }
+        }
+        return results;
+    }
+
 
     public void inserirAvaliacao(Long idDisciplina, String descricao, LocalDate data) {
         String sql = "INSERT INTO Avaliacao (descricao, data, fk_Disciplina_id_disciplina) VALUES (?, ?, ?)";
