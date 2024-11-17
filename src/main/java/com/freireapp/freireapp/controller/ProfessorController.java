@@ -47,7 +47,7 @@ public class ProfessorController {
         return professorService.VerAlunos(id);
     }
 
-    @PostMapping("/{id}/avaliacoes")
+    @PostMapping("/disciplina/{id}/avaliacao")
     public ResponseEntity<String> criarAvaliacao(@PathVariable Long id, @RequestBody Map<String, Object> avaliacaoData) {
         String descricao = (String) avaliacaoData.get("descricao");
         LocalDate data = LocalDate.parse((String) avaliacaoData.get("data"));

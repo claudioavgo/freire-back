@@ -29,7 +29,8 @@ public class ProfessorRepository {
     public List<Map<String, Object>> getAlunosInformacoes(Long idProfessor) {
         String sql = "SELECT " +
                 "    d.nome AS disciplina, " +
-                "    p_aluno.nome AS aluno " + // Removed the trailing comma
+                "    p_aluno.nome AS aluno, " +
+                "    GROUP_CONCAT(ra.nota SEPARATOR ', ') AS notas " + // Assuming 'nota' is the column for scores
                 "FROM " +
                 "    Disciplina d " +
                 "JOIN " +
@@ -56,16 +57,17 @@ public class ProfessorRepository {
         List<Map<String, Object>> results = jdbcTemplate.queryForList(sql, idProfessor);
 
         for (Map<String, Object> row : results) {
-            String notas = (String) row.get("notas");
-            if (notas != null) {
-                String[] notasArray = notas.split(", ");
+            Object notasObj = row.get("notas");
+            if (notasObj != null && notasObj instanceof String) {
+                String notas = (String) notasObj;
+                String[] notasArray = notas.split(",\\s*"); // Split by comma and optional whitespace
                 List<Double> notasNumericas = new ArrayList<>();
                 for (String nota : notasArray) {
                     try {
                         notasNumericas.add(Double.valueOf(nota));
                     } catch (NumberFormatException e) {
-                        // Handle parsing error if needed
-                        notasNumericas.add(0.0); // Add a default value or handle accordingly
+                        // Handle parsing error if needed, using 0.0 as a default value
+                        notasNumericas.add(0.0);
                     }
                 }
                 row.put("notas", notasNumericas);
