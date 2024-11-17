@@ -22,7 +22,6 @@ public class PessoaService {
         for (Map<String, Object> pessoa : todasPessoas) {
             int pessoaId = (int) pessoa.getOrDefault("id_pessoa", -1);
             if (pessoaId == -1) {
-                System.out.println("ID da pessoa não encontrado: " + pessoa);
                 pessoa.put("tipo", "Não especificado");
                 continue;
             }

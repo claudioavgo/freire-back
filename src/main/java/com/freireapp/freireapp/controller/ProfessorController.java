@@ -5,7 +5,7 @@ import com.freireapp.freireapp.service.PessoaService;
 import com.freireapp.freireapp.service.PresencaService;
 import com.freireapp.freireapp.service.ProfessorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/professor")
+@RequestMapping("/api/professores")
+  
 @CrossOrigin(origins = "*")
 public class ProfessorController {
 
@@ -25,15 +26,19 @@ public class ProfessorController {
     @Autowired
     private PessoaService pessoaService;
 
-    @GetMapping()
+    /*@GetMapping()
     public List<Map<String, Object>> listarProfessores() {
-        return presencaService.listarProfessores();
-    }
+        return professorService.listarProfessores();
+    }*/
 
     @PostMapping("/chamada")
     public ResponseEntity<String> registrarFaltas(@RequestBody RegistroFaltasDTO registroFaltas) {
-        presencaService.registrarChamada(registroFaltas);
-        return ResponseEntity.status(200).body("Faltas registradas com sucesso.");
+        try {
+            presencaService.registrarChamada(registroFaltas);
+            return ResponseEntity.ok("Faltas registradas com sucesso.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao registrar faltas.");
+        }
     }
 
     @GetMapping("/{id}/qtd-alunos")
@@ -55,5 +60,4 @@ public class ProfessorController {
 
         return ResponseEntity.status(201).body("Boa");
     }
-
 }

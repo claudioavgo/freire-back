@@ -22,13 +22,11 @@ public class AlunoController {
     @GetMapping("/{id}/avaliacao")
     public List<Map<String,Object>> todasNotas(@PathVariable Long id) {
         return alunoService.todasNotas(id);
-    }
-
+      
     @GetMapping("/{id}/rendimento")
     public Map<String, Object> mediaGeral (@PathVariable Long id) {
         return alunoService.mediaGeral(id);
     }
-
     @GetMapping("/{idAluno}/avaliacao/{idDisciplina}")
     public List<Map<String,Object>> notasAluno(@PathVariable Long idAluno, @PathVariable Long idDisciplina) {
         return alunoService.notasAluno(idAluno, idDisciplina);
