@@ -30,8 +30,8 @@ public class ProfessorRepository {
         String sql = "SELECT " +
                 "    d.nome AS disciplina, " +
                 "    p_aluno.nome AS aluno, " +
-                "    COALESCE(ra.nota, 0) AS nota, " +
-                "    COUNT(CASE WHEN pr.status = 'F' THEN 1 END) AS faltas " +
+                "    GROUP_CONCAT(DISTINCT ra.nota ORDER BY ra.nota SEPARATOR ', ') AS notas, " +
+                "    COUNT(DISTINCT CASE WHEN pr.status = 'F' THEN pr.id_presenca END) AS faltas " +
                 "FROM " +
                 "    Disciplina d " +
                 "JOIN " +
@@ -53,10 +53,12 @@ public class ProfessorRepository {
                 "WHERE " +
                 "    d.fk_Professor_fk_Pessoa_id_pessoa = ? " +
                 "GROUP BY " +
-                "    d.nome, p_aluno.nome, ra.nota";
+                "    d.nome, p_aluno.nome";
 
         return jdbcTemplate.queryForList(sql, idProfessor);
     }
+
+
 
     public void inserirAvaliacao(Long idDisciplina, String descricao, LocalDate data) {
         String sql = "INSERT INTO Avaliacao (descricao, data, fk_Disciplina_id_disciplina) VALUES (?, ?, ?)";
