@@ -183,7 +183,12 @@ public class ProfessorRepository {
                 "    a.hora_inicio, " +
                 "    a.hora_fim, " +
                 "    a.sala, " +
-                "    d.nome AS disciplina " +
+                "    d.nome AS disciplina, " +
+                "    EXISTS ( " +
+                "        SELECT 1 FROM Avaliacao av " +
+                "        WHERE av.fk_Disciplina_id_disciplina = d.id_disciplina " +
+                "          AND av.data = CURRENT_DATE " +
+                "    ) AS is_prova " +
                 "FROM " +
                 "    Aula a " +
                 "JOIN " +
