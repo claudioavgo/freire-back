@@ -61,7 +61,7 @@ public class PessoaService {
             {
                 pessoa.setTipo("professor");
             } else {
-                pessoa.setTipo("secretaria");
+                pessoa.setTipo("aluno");
             }
             return pessoa;
         }
