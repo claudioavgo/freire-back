@@ -126,6 +126,14 @@ public class ProfessorController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{id}/aulas-ministradas")
+    public ResponseEntity<Map<String, Integer>> contarAulasMinistradas(@PathVariable Long id) {
+        int totalAulas = professorService.contarAulasMinistradas(id);
+        Map<String, Integer> response = new HashMap<>();
+        response.put("aulas_ministradas", totalAulas);
+        return ResponseEntity.ok(response);
+    }
+
 }
 
 
