@@ -62,6 +62,6 @@ public class AlunoController {
 
     @PostMapping("/{id}/pagamento")
     public ResponseEntity pagamentoBoleto(@PathVariable Long id) {
-        return pagamentoBoleto(id);
+        return alunoService.pagamentoBoleto(id);
     }
 }

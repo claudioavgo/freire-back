@@ -55,6 +55,6 @@ public class AlunoService {
     }
     public ResponseEntity pagamentoBoleto(Long id) {
         alunoRepository.pagamentoBoleto(id);
-        return ResponseEntity.status(200).body("Pagamento realizado com sucesso");
+        return ResponseEntity.status(200).body("Pagamento realizado com sucesso.");
     }
 }
