@@ -2,6 +2,7 @@ package com.freireapp.freireapp.controller;
 
 import com.freireapp.freireapp.service.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,8 +61,12 @@ public class AlunoController {
         return alunoService.Financeiro(id);
     }
 
-    @PostMapping("/{id}/pagamento")
+    @PutMapping("/{id}/pagamento")
     public ResponseEntity pagamentoBoleto(@PathVariable Long id) {
-        return alunoService.pagamentoBoleto(id);
+        try {
+            return alunoService.pagamentoBoleto(id);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Boleto não encontrado.");
+        }
     }
 }

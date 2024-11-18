@@ -2,6 +2,7 @@ package com.freireapp.freireapp.service;
 
 import com.freireapp.freireapp.repository.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +55,10 @@ public class AlunoService {
         return alunoRepository.getMediaTotal(id);
     }
     public ResponseEntity pagamentoBoleto(Long id) {
-        alunoRepository.pagamentoBoleto(id);
+        Map<String, Object> pagamentoExiste = alunoRepository.pagamentoBoleto(id);
+        if(pagamentoExiste == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Boleto não encontrado.");
+        }
         return ResponseEntity.status(200).body("Pagamento realizado com sucesso.");
     }
 }

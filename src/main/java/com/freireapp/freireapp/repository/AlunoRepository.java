@@ -125,13 +125,19 @@ public class AlunoRepository {
         return jdbcTemplate.queryForMap(sql, idAluno);
     }
 
-    public void pagamentoBoleto(Long id) {
+    public Map<String,Object> pagamentoBoleto(Long id) {
         String sql = "UPDATE Pagamento\n" +
                 "SET status = 1\n" +
                 "WHERE id_pagamento = ?";
         jdbcTemplate.update(sql, id);
+        return boletoExiste(id);
     }
 
+    public Map<String, Object> boletoExiste(Long id) {
+        String sql = "SELECT * FROM Pagamento\n" +
+                "WHERE id_pagamento = ?";
+        return jdbcTemplate.queryForMap(sql,id);
+    }
 
 
 

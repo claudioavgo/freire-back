@@ -58,11 +58,16 @@ public class ProfessorService {
         return professorRepository.getResultadosPorAvaliacao(idAvaliacao);
     }
 
-    public ResponseEntity deletarAvaliacao(Long id) {
-        if (professorRepository.avaliacaoExiste(id) == null) {
+    public ResponseEntity<String> deletarAvaliacao(Long id) {
+        if (!professorRepository.avaliacaoExiste(id)) {
+            System.out.println("Avaliação não existe");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Avaliação não existe.");
         }
         professorRepository.deletarAvaliacao(id);
-        return ResponseEntity.status(200).body("Avaliação deletada com sucesso.");
+        return ResponseEntity.status(HttpStatus.OK).body("Avaliação deletada com sucesso.");
+    }
+
+    public void editarAvaliacao(Long idAvaliacao, String descricao, LocalDate data) {
+        professorRepository.atualizarAvaliacao(idAvaliacao, descricao, data);
     }
 }

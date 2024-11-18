@@ -55,4 +55,15 @@ public class SecretariaRepository {
                 "VALUES (?, ?),";
         jdbcTemplate.update(sql, id,data.idSecretaria());
     }
+
+    public Boolean pessoaExiste(Long id) {
+        String sql = "SELECT COUNT(*) FROM Pessoa WHERE id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        return count != null && count > 0;
+    }
+
+    public void deletarPessoa(Long id) {
+        String sql = "DELETE FROM Pessoa WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }

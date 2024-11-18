@@ -106,18 +106,11 @@ public class ProfessorRepository {
     }
 
     public List<Map<String, Object>> getAlunosPorDisciplina(Long idDisciplina) {
-        String sql = "SELECT " +
-                "    p.nome AS nome_aluno, " +
-                "    a.fk_Pessoa_id_pessoa AS id_aluno, " +
-                "    a.periodo AS periodo_aluno " +
-                "FROM " +
-                "    Matriculado m " +
-                "JOIN " +
-                "    Aluno a ON a.fk_Pessoa_id_pessoa = m.fk_Aluno_fk_Pessoa_id_pessoa " +
-                "JOIN " +
-                "    Pessoa p ON p.id_pessoa = a.fk_Pessoa_id_pessoa " +
-                "WHERE " +
-                "    m.fk_Disciplina_id_disciplina = ?";
+        String sql = "SELECT p.nome AS nome_aluno, a.fk_Pessoa_id_pessoa AS id_aluno, a.periodo AS periodo_aluno, p.email as email_aluno\n" +
+                "FROM Matriculado m\n" +
+                "JOIN Aluno a ON a.fk_Pessoa_id_pessoa = m.fk_Aluno_fk_Pessoa_id_pessoa\n" +
+                "JOIN Pessoa p ON p.id_pessoa = a.fk_Pessoa_id_pessoa\n" +
+                "WHERE m.fk_Disciplina_id_disciplina = ?";
 
         return jdbcTemplate.queryForList(sql, idDisciplina);
     }
@@ -156,14 +149,26 @@ public class ProfessorRepository {
         return jdbcTemplate.queryForList(sql, idAvaliacao);
     }
 
+    public Boolean avaliacaoExiste(Long id) {
+        String sql = "SELECT COUNT(*) FROM Avaliacao a WHERE a.id_avaliacao = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        return count != null && count > 0;
+    }
+
     public void deletarAvaliacao(Long id) {
-        String sql = "DELETE FROM Avaliacao\n" +
-                "WHERE id_avaliacao=?";
+        String sql = "DELETE FROM Avaliacao WHERE id_avaliacao = ?";
         jdbcTemplate.update(sql, id);
     }
 
-    public Map<String, Object> avaliacaoExiste(Long id) {
-        String sql = "SELECT * FROM Avaliacao a WHERE a.id_avaliacao = ?";
-        return jdbcTemplate.queryForMap(sql, id);
+    public void atualizarAvaliacao(Long idAvaliacao, String descricao, LocalDate data) {
+        String sql = "UPDATE Avaliacao " +
+                "SET descricao = ?, data = ? " +
+                "WHERE id_avaliacao = ?";
+
+        int rowsAffected = jdbcTemplate.update(sql, descricao, data, idAvaliacao);
+
+        if (rowsAffected == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Avaliação não encontrada.");
+        }
     }
 }

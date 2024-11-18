@@ -93,14 +93,23 @@ public class ProfessorController {
         return professorService.listarResultadosPorAvaliacao(id);
     }
 
-    @DeleteMapping("/avaliacao/{id}/deletar")
-    public ResponseEntity deletarAvaliacao(@PathVariable Long id) {
+    @DeleteMapping("/avaliacao/{id}")
+    public ResponseEntity<String> deletarAvaliacao(@PathVariable Long id) {
         try {
-            professorService.deletarAvaliacao(id);
-            return ResponseEntity.status(200).body("Avaliação deletada com sucesso.");
+            return professorService.deletarAvaliacao(id);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Avaliação não existe.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar a avaliação.");
         }
+    }
+
+    @PutMapping("/avaliacao/{id}")
+    public ResponseEntity<String> editarAvaliacao(@PathVariable Long id, @RequestBody Map<String, Object> avaliacaoData) {
+        String descricao = (String) avaliacaoData.get("descricao");
+        LocalDate data = LocalDate.parse((String) avaliacaoData.get("data"));
+
+        professorService.editarAvaliacao(id, descricao, data);
+
+        return ResponseEntity.status(200).body("Avaliação atualizada com sucesso.");
     }
 }
 
