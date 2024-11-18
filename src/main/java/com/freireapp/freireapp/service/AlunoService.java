@@ -2,6 +2,7 @@ package com.freireapp.freireapp.service;
 
 import com.freireapp.freireapp.repository.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -51,5 +52,9 @@ public class AlunoService {
     }
     public Map<String, Object> mediaGeral(Long id) {
         return alunoRepository.getMediaTotal(id);
+    }
+    public ResponseEntity pagamentoBoleto(Long id) {
+        alunoRepository.pagamentoBoleto(id);
+        return ResponseEntity.status(200).body("Pagamento realizado com sucesso");
     }
 }

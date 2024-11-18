@@ -59,4 +59,9 @@ public class AlunoController {
     public List<Map<String, Object>> Financeiro(@PathVariable Long id) {
         return alunoService.Financeiro(id);
     }
+
+    @PostMapping("/{id}/pagamento")
+    public ResponseEntity pagamentoBoleto(@PathVariable Long id) {
+        return pagamentoBoleto(id);
+    }
 }

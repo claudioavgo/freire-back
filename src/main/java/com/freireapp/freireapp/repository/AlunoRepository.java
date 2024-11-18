@@ -125,6 +125,13 @@ public class AlunoRepository {
         return jdbcTemplate.queryForMap(sql, idAluno);
     }
 
+    public void pagamentoBoleto(Long id) {
+        String sql = "UPDATE Pagamento\n" +
+                "SET status = 1\n" +
+                "WHERE id_pagamento = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
 
 
 
