@@ -94,5 +94,9 @@ public class ProfessorService {
         return professorRepository.getAulasdoDia(idProfessor);
     }
 
+    public int contarProvasCorrigidas(Long idProfessor) {
+        return professorRepository.contarProvasCorrigidas(idProfessor);
+    }
+
 
 }

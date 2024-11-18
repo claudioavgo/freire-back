@@ -203,4 +203,16 @@ public class ProfessorRepository {
         return jdbcTemplate.queryForList(sql, idProfessor, diaSemanaAtual);
     }
 
+    public int contarProvasCorrigidas(Long idProfessor) {
+        String sql = "SELECT COUNT(*) AS total_corrigidas " +
+                "FROM ResultadoAvaliacao ra " +
+                "JOIN Avaliacao a ON ra.fk_Avaliacao_id_avaliacao = a.id_avaliacao " +
+                "JOIN Disciplina d ON a.fk_Disciplina_id_disciplina = d.id_disciplina " +
+                "WHERE d.fk_Professor_fk_Pessoa_id_pessoa = ? " +
+                "  AND ra.nota IS NOT NULL"; // Filtra somente provas corrigidas
+
+        return jdbcTemplate.queryForObject(sql, Integer.class, idProfessor);
+    }
+
+
 }

@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -117,6 +118,13 @@ public class ProfessorController {
         return professorService.listarAulaDoDia(id);
     }
 
+    @GetMapping("/{id}/corrigidas")
+    public ResponseEntity<Map<String, Integer>> contarProvasCorrigidas(@PathVariable Long id) {
+        int totalCorrigidas = professorService.contarProvasCorrigidas(id);
+        Map<String, Integer> response = new HashMap<>();
+        response.put("corrigidas", totalCorrigidas);
+        return ResponseEntity.ok(response);
+    }
 
 }
 
