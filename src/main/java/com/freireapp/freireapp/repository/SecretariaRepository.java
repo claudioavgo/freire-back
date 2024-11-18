@@ -34,27 +34,26 @@ public class SecretariaRepository {
         );
     }
 
-    public void cadastrarAluno(CadastroDTO data) {
-        Map<String, Object> pessoaData = pessoaRepository.getIdByEmail(data.email());
-        Long id = ((Number) pessoaData.get("id")).longValue();
-        String sql = "INSERT INTO Aluno (fk_Pessoa_id_pessoa, periodo) VALUES (?, ?)";
-        jdbcTemplate.update(sql, id, data.periodo());
-    }
-    public void cadastrarProfessor(CadastroDTO data) {
-        Map<String, Object> pessoaData = pessoaRepository.getIdByEmail(data.email());
-        Long id = ((Number) pessoaData.get("id")).longValue();
-        String sql = "INSERT INTO Professor (fk_Pessoa_id_pessoa, especializacao) \n" +
-                "VALUES (?, ?)";
-        jdbcTemplate.update(sql, id,data.especializacao());
+    public Long obterIdPessoaPorEmail(String email) {
+        String sql = "SELECT id_pessoa FROM Pessoa WHERE email = ?";
+        return jdbcTemplate.queryForObject(sql, Long.class, email);
     }
 
-    public void cadastrarSecretaria(CadastroDTO data) {
-        Map<String, Object> pessoaData = pessoaRepository.getIdByEmail(data.email());
-        Long id = ((Number) pessoaData.get("id")).longValue();
-        String sql = "INSERT INTO Secretaria (fk_Pessoa_id_pessoa, fk_Secretaria_fk_Pessoa_id_pessoa)\n" +
-                "VALUES (?, ?),";
-        jdbcTemplate.update(sql, id,data.idSecretaria());
+    public void cadastrarAluno(int periodo, Long idPessoa) {
+        String sql = "INSERT INTO Aluno (fk_Pessoa_id_pessoa, periodo) VALUES (?, ?)";
+        jdbcTemplate.update(sql, idPessoa, periodo);
     }
+
+    public void cadastrarProfessor(CadastroDTO data, Long idPessoa) {
+        String sql = "INSERT INTO Professor (fk_Pessoa_id_pessoa, especializacao) VALUES (?, ?)";
+        jdbcTemplate.update(sql, idPessoa, data.especializacao());
+    }
+
+    public void cadastrarSecretaria(CadastroDTO data, Long idPessoa) {
+        String sql = "INSERT INTO Secretaria (fk_Pessoa_id_pessoa, fk_Secretaria_fk_Pessoa_id_pessoa) VALUES (?, ?)";
+        jdbcTemplate.update(sql, idPessoa, data.idSecretaria());
+    }
+
 
     public Boolean pessoaExiste(Long id) {
         String sql = "SELECT COUNT(*) FROM Pessoa WHERE id_pessoa = ?";

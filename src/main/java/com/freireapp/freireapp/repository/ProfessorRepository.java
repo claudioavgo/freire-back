@@ -59,13 +59,12 @@ public class ProfessorRepository {
             Object notasObj = row.get("notas");
             if (notasObj != null && notasObj instanceof String) {
                 String notas = (String) notasObj;
-                String[] notasArray = notas.split(",\\s*"); // Split by comma and optional whitespace
+                String[] notasArray = notas.split(",\\s*");
                 List<Double> notasNumericas = new ArrayList<>();
                 for (String nota : notasArray) {
                     try {
                         notasNumericas.add(Double.valueOf(nota));
                     } catch (NumberFormatException e) {
-                        // Handle parsing error if needed, using 0.0 as a default value
                         notasNumericas.add(0.0);
                     }
                 }

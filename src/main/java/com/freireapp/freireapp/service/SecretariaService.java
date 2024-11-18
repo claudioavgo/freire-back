@@ -18,26 +18,35 @@ public class SecretariaService {
     @Autowired
     private PessoaRepository pessoaRepository;
 
-    public ResponseEntity cadastro(CadastroDTO data){
-        Map<String, Object> emailRepetido = pessoaRepository.getPessoaByEmail(data.email());
-        if(emailRepetido != null) {
-            return ResponseEntity.status(409).body("Já existe um usuário cadastrado com este e-mail.");
-        }
-        if(data.telefone1()!=null) {
-            Map<String, Object> telefoneRepetido = pessoaRepository.getPessoaByTelefone(data.telefone1());
-            if(telefoneRepetido != null) {
-                return ResponseEntity.status(409).body("Já existe um usuário cadastrado com este telefone.");
+    public ResponseEntity cadastro(CadastroDTO data) {
+        try {
+            Map<String, Object> emailExistente = pessoaRepository.getPessoaByEmail(data.email());
+            if (emailExistente != null) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("E-mail já está cadastrado.");
             }
+
+            if (data.telefone1() != null) {
+                Map<String, Object> telefoneExistente = pessoaRepository.getPessoaByTelefone(data.telefone1());
+                if (telefoneExistente != null) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body("Telefone já está cadastrado.");
+                }
+            }
+
+            secretariaRepository.cadastrarPessoa(data);
+            Long idPessoa = secretariaRepository.obterIdPessoaPorEmail(data.email());
+
+            if (data.tipo() == 0) {
+                secretariaRepository.cadastrarAluno(data.periodo(), idPessoa);
+            } else if (data.tipo() == 1) {
+                secretariaRepository.cadastrarProfessor(data, idPessoa);
+            } else if (data.tipo() == 2) {
+                secretariaRepository.cadastrarSecretaria(data, idPessoa);
+            }
+
+            return ResponseEntity.status(200).body("Usuário cadastrado com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao cadastrar usuário: " + e.getMessage());
         }
-        secretariaRepository.cadastrarPessoa(data);
-        if(data.tipo() == 0) {
-            secretariaRepository.cadastrarAluno(data);
-        } else if (data.tipo() == 1) {
-            secretariaRepository.cadastrarProfessor(data);
-        } else if (data.tipo() == 2 ) {
-            secretariaRepository.cadastrarSecretaria(data);
-        }
-        return ResponseEntity.status(200).body("Usuário cadastrado com sucesso!");
     }
 
     public ResponseEntity<String> deletarPessoa(Long id) {
