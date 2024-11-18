@@ -214,12 +214,11 @@ public class ProfessorRepository {
         return jdbcTemplate.queryForObject(sql, Integer.class, idProfessor);
     }
 
-    public int contarAulasMinistradas(Long idProfessor) {
+    public Map<String, Object> contarAulasMinistradas(Long idProfessor) {
         String sql = "SELECT COUNT(DISTINCT p.data) AS total_aulas " +
                 "FROM Presenca p " +
                 "WHERE p.fk_Professor_fk_Pessoa_id_pessoa = ?";
-
-        return jdbcTemplate.queryForObject(sql, Integer.class, idProfessor);
+        return jdbcTemplate.queryForMap(sql, idProfessor);
     }
 
 

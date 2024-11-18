@@ -98,7 +98,7 @@ public class ProfessorService {
         return professorRepository.contarProvasCorrigidas(idProfessor);
     }
 
-    public int contarAulasMinistradas(Long idProfessor) {
+    public Map<String, Object> contarAulasMinistradas(Long idProfessor) {
         return professorRepository.contarAulasMinistradas(idProfessor);
     }
 
