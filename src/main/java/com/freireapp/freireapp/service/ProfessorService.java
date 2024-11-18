@@ -4,6 +4,7 @@ import com.freireapp.freireapp.dto.NotasAvaliacaoDTO;
 import com.freireapp.freireapp.repository.AlunoRepository;
 import com.freireapp.freireapp.repository.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,8 +37,8 @@ public class ProfessorService {
         professorRepository.criarAvaliacao(idDisciplina, descricao, data);
     }
 
-    public ResponseEntity notasAvaliacao(NotasAvaliacaoDTO data){
-        professorRepository.inserirResultadoAvaliacao(data);
+    public ResponseEntity notasAvaliacao(Long id,NotasAvaliacaoDTO data){
+        professorRepository.inserirResultadoAvaliacao(id,data);
         return ResponseEntity.status(200).body("Resultado inserido com sucesso.");
     }
 
@@ -49,10 +50,6 @@ public class ProfessorService {
         return professorRepository.getAlunosPorDisciplina(idDisciplina);
     }
 
-    public List<Map<String, Object>> listarNotasDisciplinas (@PathVariable Long idProfessor, @PathVariable Long idDisciplina) {
-        return professorRepository.listarNotasDisciplinas(idProfessor, idDisciplina);
-    }
-
     public List<Map<String, Object>> listarAvaliacao (@PathVariable Long id){
         return professorRepository.listarAvaliacao(id);
     }
@@ -61,4 +58,11 @@ public class ProfessorService {
         return professorRepository.getResultadosPorAvaliacao(idAvaliacao);
     }
 
+    public ResponseEntity deletarAvaliacao(Long id) {
+        if (professorRepository.avaliacaoExiste(id) == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Avaliação não existe.");
+        }
+        professorRepository.deletarAvaliacao(id);
+        return ResponseEntity.status(200).body("Avaliação deletada com sucesso.");
+    }
 }

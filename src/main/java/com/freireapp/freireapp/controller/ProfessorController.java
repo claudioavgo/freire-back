@@ -3,6 +3,7 @@ package com.freireapp.freireapp.controller;
 import com.freireapp.freireapp.dto.AvaliacaoDTO;
 import com.freireapp.freireapp.dto.NotasAvaliacaoDTO;
 import com.freireapp.freireapp.dto.RegistroFaltasDTO;
+import com.freireapp.freireapp.repository.ProfessorRepository;
 import com.freireapp.freireapp.service.PessoaService;
 import com.freireapp.freireapp.service.PresencaService;
 import com.freireapp.freireapp.service.ProfessorService;
@@ -27,6 +28,8 @@ public class ProfessorController {
     private ProfessorService professorService;
     @Autowired
     private PessoaService pessoaService;
+    @Autowired
+    private ProfessorRepository professorRepository;
 
     @GetMapping()
     public List<Map<String, Object>> listarProfessores() {
@@ -65,19 +68,14 @@ public class ProfessorController {
         }
     }
 
-    @PostMapping("/avaliacao")
-    public ResponseEntity notasAvaliacao(@RequestBody NotasAvaliacaoDTO data) {
-        return ResponseEntity.status(200).body(professorService.notasAvaliacao(data));
+    @PostMapping("/avaliacao/{id}")
+    public ResponseEntity notasAvaliacao(@PathVariable Long id, @RequestBody NotasAvaliacaoDTO data) {
+        return ResponseEntity.status(200).body(professorService.notasAvaliacao(id,data));
     }
 
     @GetMapping("/{id}/disciplinas")
     public List<Map<String, Object>> listarDisciplinas (@PathVariable Long id) {
         return professorService.listarDisciplinas(id);
-    }
-
-    @GetMapping("{idProfessor}/avaliacao/{idDisciplina}")
-    public List<Map<String, Object>> listarNotasDisciplinas (@PathVariable Long idProfessor, @PathVariable Long idDisciplina) {
-        return professorService.listarNotasDisciplinas(idProfessor, idDisciplina);
     }
 
     @GetMapping("/disciplina/{id}/alunos")
@@ -95,7 +93,15 @@ public class ProfessorController {
         return professorService.listarResultadosPorAvaliacao(id);
     }
 
-
+    @DeleteMapping("/avaliacao/{id}/deletar")
+    public ResponseEntity deletarAvaliacao(@PathVariable Long id) {
+        try {
+            professorService.deletarAvaliacao(id);
+            return ResponseEntity.status(200).body("Avaliação deletada com sucesso.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Avaliação não existe.");
+        }
+    }
 }
 
 

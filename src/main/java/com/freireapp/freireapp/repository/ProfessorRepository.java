@@ -88,11 +88,11 @@ public class ProfessorRepository {
         }
     }
 
-    public void inserirResultadoAvaliacao(NotasAvaliacaoDTO data) {
+    public void inserirResultadoAvaliacao(Long id,NotasAvaliacaoDTO data) {
         String sql = "INSERT INTO ResultadoAvaliacao " +
                 "(fk_Aluno_fk_Pessoa_id_pessoa, fk_Professor_fk_Pessoa_id_pessoa, fk_Avaliacao_id_avaliacao, nota, feedback) " +
                 "VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, data.idAluno(), data.idProfessor(), data.idAvaliacao(), data.nota(), data.feedback());
+        jdbcTemplate.update(sql, data.idAluno(), data.idProfessor(), id, data.nota(), data.feedback());
     }
 
     public List<Map<String, Object>> listarDisciplinas(Long id) {
@@ -121,59 +121,6 @@ public class ProfessorRepository {
 
         return jdbcTemplate.queryForList(sql, idDisciplina);
     }
-
-
-    public List<Map<String, Object>> listarNotasDisciplinas(Long idProfessor, Long idDisciplina) {
-        String sql = "SELECT " +
-                "    p_aluno.nome AS aluno, " +
-                "    d.nome AS disciplina, " +
-                "    ra.nota AS nota " +
-                "FROM " +
-                "    Disciplina d " +
-                "JOIN " +
-                "    Matriculado m ON m.fk_Disciplina_id_disciplina = d.id_disciplina " +
-                "JOIN " +
-                "    Aluno al ON al.fk_Pessoa_id_pessoa = m.fk_Aluno_fk_Pessoa_id_pessoa " +
-                "JOIN " +
-                "    Pessoa p_aluno ON p_aluno.id_pessoa = al.fk_Pessoa_id_pessoa " +
-                "LEFT JOIN " +
-                "    ResultadoAvaliacao ra ON ra.fk_Aluno_fk_Pessoa_id_pessoa = al.fk_Pessoa_id_pessoa " +
-                "                         AND ra.fk_Avaliacao_id_avaliacao IN ( " +
-                "                             SELECT id_avaliacao " +
-                "                             FROM Avaliacao " +
-                "                             WHERE Avaliacao.fk_Disciplina_id_disciplina = d.id_disciplina " +
-                "                         ) " +
-                "WHERE " +
-                "    d.fk_Professor_fk_Pessoa_id_pessoa = ? " +
-                "    AND d.id_disciplina = ? " +
-                "ORDER BY " +
-                "    p_aluno.nome";
-
-        List<Map<String, Object>> results = jdbcTemplate.queryForList(sql, idProfessor, idDisciplina);
-
-        Map<String, Map<String, Object>> groupedResults = new LinkedHashMap<>();
-        for (Map<String, Object> row : results) {
-            String aluno = (String) row.get("aluno");
-            String disciplina = (String) row.get("disciplina");
-            Double nota = row.get("nota") != null ? ((Number) row.get("nota")).doubleValue() : null;
-
-            if (!groupedResults.containsKey(aluno)) {
-                Map<String, Object> alunoData = new LinkedHashMap<>();
-                alunoData.put("aluno", aluno);
-                alunoData.put("disciplina", disciplina);
-                alunoData.put("notas", new ArrayList<Double>());
-                groupedResults.put(aluno, alunoData);
-            }
-
-            if (nota != null) {
-                @SuppressWarnings("unchecked")
-                List<Double> notasList = (List<Double>) groupedResults.get(aluno).get("notas");
-                notasList.add(Math.round(nota * 10.0) / 10.0);
-            }
-        }
-
-        return new ArrayList<>(groupedResults.values());
-    };
 
     public List<Map<String, Object>> listarAvaliacao(Long id) {
         String sql = "SELECT \n" +
@@ -207,5 +154,16 @@ public class ProfessorRepository {
                 "    ra.fk_Avaliacao_id_avaliacao = ?";
 
         return jdbcTemplate.queryForList(sql, idAvaliacao);
+    }
+
+    public void deletarAvaliacao(Long id) {
+        String sql = "DELETE FROM Avaliacao\n" +
+                "WHERE id_avaliacao=?";
+        jdbcTemplate.update(sql, id);
+    }
+
+    public Map<String, Object> avaliacaoExiste(Long id) {
+        String sql = "SELECT * FROM Avaliacao a WHERE a.id_avaliacao = ?";
+        return jdbcTemplate.queryForMap(sql, id);
     }
 }
