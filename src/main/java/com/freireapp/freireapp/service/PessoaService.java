@@ -65,4 +65,9 @@ public class PessoaService {
 
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuário ou senha incorreto.");
     }
+
+    public List<Map<String, Object>> listarAulasDoDia(Long idPessoa) {
+        return pessoaRepository.getAulasDoDia(idPessoa);
+    }
+
 }

@@ -31,4 +31,9 @@ public class PessoaController {
     public ResponseEntity autenticarPessoa(@RequestBody LoginDTO data) {
         return ResponseEntity.status(200).body(pessoaService.autenticar(data.email(), data.senha()));
     }
+
+    @GetMapping("/{id}/agenda-hoje")
+    public List<Map<String, Object>> listarAulasDoDia(@PathVariable Long id) {
+        return pessoaService.listarAulasDoDia(id);
+    }
 }

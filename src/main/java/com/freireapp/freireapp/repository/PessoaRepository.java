@@ -8,7 +8,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @Repository
@@ -91,4 +94,47 @@ public class PessoaRepository {
         String sql = "SELECT p.id_pessoa FROM Pessoa p WHERE p.email = ?";
         return jdbcTemplate.queryForMap(sql,email);
     }
+
+    public List<Map<String, Object>> getAulasDoDia(Long idPessoa) {
+        String sql = "SELECT a.dia_semana, " +
+                "       a.hora_inicio, " +
+                "       a.hora_fim, " +
+                "       a.sala, " +
+                "       d.nome AS disciplina, " +
+                "       p.nome AS nome_professor, " +
+                "       CASE " +
+                "           WHEN EXISTS ( " +
+                "               SELECT 1 " +
+                "               FROM Avaliacao av " +
+                "               WHERE av.fk_Disciplina_id_disciplina = d.id_disciplina " +
+                "                 AND av.data = CURRENT_DATE " +
+                "           ) THEN true " +
+                "           ELSE false " +
+                "       END AS is_prova " +
+                "FROM Aula a " +
+                "JOIN Disciplina d ON a.fk_Disciplina_id_disciplina = d.id_disciplina " +
+                "JOIN Professor pr ON d.fk_Professor_fk_Pessoa_id_pessoa = pr.fk_Pessoa_id_pessoa " +
+                "JOIN Pessoa p ON pr.fk_Pessoa_id_pessoa = p.id_pessoa " +
+                "LEFT JOIN Matriculado m ON m.fk_Disciplina_id_disciplina = d.id_disciplina " +
+                "WHERE (a.fk_Professor_fk_Pessoa_id_pessoa = ? " +
+                "       OR m.fk_Aluno_fk_Pessoa_id_pessoa = ?) " +
+                "  AND a.dia_semana = ?";
+
+        String diaSemanaAtual = LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("pt", "BR"));
+        String diaSemana = diaSemanaAtual.substring(0, 1).toUpperCase() + diaSemanaAtual.substring(1);
+
+        List<Map<String, Object>> aulas = jdbcTemplate.queryForList(sql, idPessoa, idPessoa, diaSemana);
+
+        // Garantindo que 'is_prova' seja um booleano
+        for (Map<String, Object> aula : aulas) {
+            Object isProva = aula.get("is_prova");
+            if (isProva instanceof Number) {
+                aula.put("is_prova", ((Number) isProva).intValue() == 1);
+            }
+        }
+
+        return aulas;
+    }
+
+
 }
