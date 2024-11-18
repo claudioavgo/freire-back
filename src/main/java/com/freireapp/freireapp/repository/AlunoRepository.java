@@ -57,14 +57,24 @@ public class AlunoRepository {
                 "       a.sala, " +
                 "       d.nome AS disciplina, " +
                 "       p.nome AS professor, " +
-                "       p.id_pessoa AS id_professor " +
+                "       p.id_pessoa AS id_professor, " +
+                "       CASE " +
+                "           WHEN EXISTS ( " +
+                "               SELECT 1 " +
+                "               FROM Avaliacao av " +
+                "               WHERE av.fk_Disciplina_id_disciplina = d.id_disciplina " +
+                "                 AND av.data = CURRENT_DATE " +
+                "           ) THEN 1 " +
+                "           ELSE 0 " +
+                "       END AS is_prova " +
                 "FROM Matriculado m " +
                 "JOIN Disciplina d ON m.fk_Disciplina_id_disciplina = d.id_disciplina " +
                 "JOIN Aula a ON d.id_disciplina = a.fk_Disciplina_id_disciplina " +
                 "JOIN Professor pr ON d.fk_Professor_fk_Pessoa_id_pessoa = pr.fk_Pessoa_id_pessoa " +
                 "JOIN Pessoa p ON pr.fk_Pessoa_id_pessoa = p.id_pessoa " +
-                "WHERE m.fk_Aluno_fk_Pessoa_id_pessoa = ?" +
+                "WHERE m.fk_Aluno_fk_Pessoa_id_pessoa = ? " +
                 "  AND a.dia_semana = ?";
+
         return jdbcTemplate.queryForList(sql, idAluno, diaSemana);
     }
 
