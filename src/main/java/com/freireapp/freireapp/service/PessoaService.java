@@ -57,8 +57,11 @@ public class PessoaService {
         if (pessoa.getSenha().equals(senha)) {
             if(pessoaRepository.eAluno(pessoa.getIdPessoa())) {
                 pessoa.setTipo("aluno");
-            } else {
+            }  if(pessoaRepository.eProfessor(pessoa.getIdPessoa()))
+            {
                 pessoa.setTipo("professor");
+            } else {
+                pessoa.setTipo("secretaria");
             }
             return pessoa;
         }

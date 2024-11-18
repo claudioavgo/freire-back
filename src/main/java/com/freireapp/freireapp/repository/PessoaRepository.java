@@ -125,7 +125,6 @@ public class PessoaRepository {
 
         List<Map<String, Object>> aulas = jdbcTemplate.queryForList(sql, idPessoa, idPessoa, diaSemana);
 
-        // Garantindo que 'is_prova' seja um booleano
         for (Map<String, Object> aula : aulas) {
             Object isProva = aula.get("is_prova");
             if (isProva instanceof Number) {
