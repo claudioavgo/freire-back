@@ -96,28 +96,28 @@ public class PessoaRepository {
     }
 
     public List<Map<String, Object>> getAulasDoDia(Long idPessoa) {
-        String sql = "SELECT a.dia_semana, " +
-                "       a.hora_inicio, " +
-                "       a.hora_fim, " +
-                "       a.sala, " +
-                "       d.nome AS disciplina, " +
-                "       p.nome AS nome_professor, " +
-                "       CASE " +
-                "           WHEN EXISTS ( " +
-                "               SELECT 1 " +
-                "               FROM Avaliacao av " +
-                "               WHERE av.fk_Disciplina_id_disciplina = d.id_disciplina " +
-                "                 AND av.data = CURRENT_DATE " +
-                "           ) THEN true " +
-                "           ELSE false " +
-                "       END AS is_prova " +
-                "FROM Aula a " +
-                "JOIN Disciplina d ON a.fk_Disciplina_id_disciplina = d.id_disciplina " +
-                "JOIN Professor pr ON d.fk_Professor_fk_Pessoa_id_pessoa = pr.fk_Pessoa_id_pessoa " +
-                "JOIN Pessoa p ON pr.fk_Pessoa_id_pessoa = p.id_pessoa " +
-                "LEFT JOIN Matriculado m ON m.fk_Disciplina_id_disciplina = d.id_disciplina " +
-                "WHERE (a.fk_Professor_fk_Pessoa_id_pessoa = ? " +
-                "       OR m.fk_Aluno_fk_Pessoa_id_pessoa = ?) " +
+        String sql = "SELECT DISTINCT a.dia_semana, \n" +
+                "                a.hora_inicio, \n" +
+                "                a.hora_fim, \n" +
+                "                a.sala, \n" +
+                "                d.nome AS disciplina, \n" +
+                "                p.nome AS nome_professor, \n" +
+                "                CASE \n" +
+                "                    WHEN EXISTS ( \n" +
+                "                        SELECT 1 \n" +
+                "                        FROM Avaliacao av \n" +
+                "                        WHERE av.fk_Disciplina_id_disciplina = d.id_disciplina \n" +
+                "                          AND av.data = CURRENT_DATE \n" +
+                "                    ) THEN true \n" +
+                "                    ELSE false \n" +
+                "                END AS is_prova \n" +
+                "FROM Aula a \n" +
+                "JOIN Disciplina d ON a.fk_Disciplina_id_disciplina = d.id_disciplina \n" +
+                "JOIN Professor pr ON d.fk_Professor_fk_Pessoa_id_pessoa = pr.fk_Pessoa_id_pessoa \n" +
+                "JOIN Pessoa p ON pr.fk_Pessoa_id_pessoa = p.id_pessoa \n" +
+                "LEFT JOIN Matriculado m ON m.fk_Disciplina_id_disciplina = d.id_disciplina \n" +
+                "WHERE (a.fk_Professor_fk_Pessoa_id_pessoa = ? \n" +
+                "       OR m.fk_Aluno_fk_Pessoa_id_pessoa = ?) \n" +
                 "  AND a.dia_semana = ?";
 
         String diaSemanaAtual = LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("pt", "BR"));
