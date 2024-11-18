@@ -57,13 +57,13 @@ public class SecretariaRepository {
     }
 
     public Boolean pessoaExiste(Long id) {
-        String sql = "SELECT COUNT(*) FROM Pessoa WHERE id = ?";
+        String sql = "SELECT COUNT(*) FROM Pessoa WHERE id_pessoa = ?";
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
         return count != null && count > 0;
     }
 
     public void deletarPessoa(Long id) {
-        String sql = "DELETE FROM Pessoa WHERE id = ?";
+        String sql = "DELETE FROM Pessoa WHERE id_pessoa = ?";
         jdbcTemplate.update(sql, id);
     }
 }
