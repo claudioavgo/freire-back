@@ -111,6 +111,13 @@ public class ProfessorController {
 
         return ResponseEntity.status(200).body("Avaliação atualizada com sucesso.");
     }
+
+    @GetMapping("/{id}/aulas-dia")
+    public List<Map<String, Object>> listarAulasDoDia(@PathVariable Long id) {
+        return professorService.listarAulaDoDia(id);
+    }
+
+
 }
 
 

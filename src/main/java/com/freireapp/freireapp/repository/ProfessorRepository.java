@@ -8,10 +8,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.format.TextStyle;
+import java.util.*;
 
 @Repository
 public class ProfessorRepository {
@@ -138,18 +136,21 @@ public class ProfessorRepository {
         String sql = "SELECT " +
                 "    p.nome AS nome_aluno, " +
                 "    a.fk_Pessoa_id_pessoa AS id_aluno, " +
-                "    ra.nota AS nota, " +
-                "    ra.feedback AS feedback " +
+                "    COALESCE(ra.nota, -1) AS nota, " + // Retorna -1 quando não há nota
+                "    COALESCE(ra.feedback, '') AS feedback " +
                 "FROM " +
-                "    ResultadoAvaliacao ra " +
-                "JOIN " +
-                "    Aluno a ON ra.fk_Aluno_fk_Pessoa_id_pessoa = a.fk_Pessoa_id_pessoa " +
+                "    Aluno a " +
                 "JOIN " +
                 "    Pessoa p ON p.id_pessoa = a.fk_Pessoa_id_pessoa " +
+                "LEFT JOIN " +
+                "    Matriculado m ON m.fk_Aluno_fk_Pessoa_id_pessoa = a.fk_Pessoa_id_pessoa " +
+                "LEFT JOIN " +
+                "    ResultadoAvaliacao ra ON ra.fk_Aluno_fk_Pessoa_id_pessoa = a.fk_Pessoa_id_pessoa " +
+                "    AND ra.fk_Avaliacao_id_avaliacao = ? " +
                 "WHERE " +
-                "    ra.fk_Avaliacao_id_avaliacao = ?";
+                "    m.fk_Disciplina_id_disciplina = (SELECT fk_Disciplina_id_disciplina FROM Avaliacao WHERE id_avaliacao = ?)";
 
-        return jdbcTemplate.queryForList(sql, idAvaliacao);
+        return jdbcTemplate.queryForList(sql, idAvaliacao, idAvaliacao);
     }
 
     public Boolean avaliacaoExiste(Long id) {
@@ -174,4 +175,27 @@ public class ProfessorRepository {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Avaliação não encontrada.");
         }
     }
+
+    public List<Map<String, Object>> getAulasdoDia(Long idProfessor) {
+        String sql = "SELECT " +
+                "    a.id_aula, " +
+                "    a.dia_semana, " +
+                "    a.hora_inicio, " +
+                "    a.hora_fim, " +
+                "    a.sala, " +
+                "    d.nome AS disciplina " +
+                "FROM " +
+                "    Aula a " +
+                "JOIN " +
+                "    Disciplina d ON a.fk_Disciplina_id_disciplina = d.id_disciplina " +
+                "WHERE " +
+                "    a.fk_Professor_fk_Pessoa_id_pessoa = ? " +
+                "    AND a.dia_semana = ?";
+
+        String diaSemanaAtual = LocalDate.now().getDayOfWeek()
+                .getDisplayName(TextStyle.FULL, new Locale("pt", "BR"));
+
+        return jdbcTemplate.queryForList(sql, idProfessor, diaSemanaAtual);
+    }
+
 }

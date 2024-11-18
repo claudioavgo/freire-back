@@ -89,4 +89,10 @@ public class ProfessorService {
     public void editarAvaliacao(Long idAvaliacao, String descricao, LocalDate data) {
         professorRepository.atualizarAvaliacao(idAvaliacao, descricao, data);
     }
+
+    public List<Map<String, Object>> listarAulaDoDia(Long idProfessor) {
+        return professorRepository.getAulasdoDia(idProfessor);
+    }
+
+
 }
