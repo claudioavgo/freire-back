@@ -60,8 +60,8 @@ public class PessoaService {
             }  if(pessoaRepository.eProfessor(pessoa.getIdPessoa()))
             {
                 pessoa.setTipo("professor");
-            } else {
-                pessoa.setTipo("aluno");
+            } if(pessoaRepository.eSecretaria(pessoa.getIdPessoa())) {
+                pessoa.setTipo("secretaria");
             }
             return pessoa;
         }
