@@ -106,15 +106,18 @@ public class ProfessorRepository {
     }
 
     public List<Map<String, Object>> getAlunosPorDisciplina(Long idDisciplina) {
-        String sql = "SELECT p.nome AS nome_aluno, a.fk_Pessoa_id_pessoa AS id_aluno, a.periodo AS periodo_aluno, p.email as email_aluno\n" +
-                "FROM Matriculado m\n" +
-                "JOIN Aluno a ON a.fk_Pessoa_id_pessoa = m.fk_Aluno_fk_Pessoa_id_pessoa\n" +
-                "JOIN Pessoa p ON p.id_pessoa = a.fk_Pessoa_id_pessoa\n" +
-                "WHERE m.fk_Disciplina_id_disciplina = ?";
+        String sql = "SELECT p.nome AS nome_aluno, a.fk_Pessoa_id_pessoa AS id_aluno, a.periodo AS periodo_aluno, p.email AS email_aluno, " +
+                "ra.nota AS nota_aluno " +
+                "FROM Matriculado m " +
+                "JOIN Aluno a ON a.fk_Pessoa_id_pessoa = m.fk_Aluno_fk_Pessoa_id_pessoa " +
+                "JOIN Pessoa p ON p.id_pessoa = a.fk_Pessoa_id_pessoa " +
+                "LEFT JOIN ResultadoAvaliacao ra ON ra.fk_Aluno_fk_Pessoa_id_pessoa = a.fk_Pessoa_id_pessoa AND ra.fk_Avaliacao_id_avaliacao IN " +
+                "(SELECT id_avaliacao FROM Avaliacao WHERE fk_Disciplina_id_disciplina = m.fk_Disciplina_id_disciplina) " +
+                "WHERE m.fk_Disciplina_id_disciplina = ? " +
+                "ORDER BY a.fk_Pessoa_id_pessoa";
 
         return jdbcTemplate.queryForList(sql, idDisciplina);
     }
-
     public List<Map<String, Object>> listarAvaliacao(Long id) {
         String sql = "SELECT \n" +
                 "    d.nome AS disciplina,\n" +
