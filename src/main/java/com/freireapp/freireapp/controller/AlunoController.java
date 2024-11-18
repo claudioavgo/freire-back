@@ -69,4 +69,11 @@ public class AlunoController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Boleto não encontrado.");
         }
     }
+
+    @GetMapping("/{id}/faturas-pendentes")
+    public Map<String, Object> listarFaturasPendentes(@PathVariable Long id) {
+        return alunoService.listarFaturasPendentes(id);
+    }
+
+
 }

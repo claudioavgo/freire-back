@@ -149,6 +149,15 @@ public class AlunoRepository {
         return jdbcTemplate.queryForMap(sql,id);
     }
 
+    public Map<String, Object> listarFaturasPendentes(Long idAluno) {
+        String sql = "SELECT COUNT(*) AS total_pendentes " +
+                "FROM Pagamento pg " +
+                "JOIN RealizaPagamento rp ON pg.id_pagamento = rp.fk_Pagamento_id_pagamento " +
+                "JOIN Aluno a ON rp.fk_Aluno_fk_Pessoa_id_pessoa = a.fk_Pessoa_id_pessoa " +
+                "WHERE a.fk_Pessoa_id_pessoa = ? AND pg.status = 0";
+        return jdbcTemplate.queryForMap(sql, idAluno);
+    }
+
 
 
 }

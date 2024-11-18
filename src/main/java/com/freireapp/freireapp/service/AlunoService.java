@@ -61,4 +61,8 @@ public class AlunoService {
         }
         return ResponseEntity.status(200).body("Pagamento realizado com sucesso.");
     }
+
+    public Map<String, Object> listarFaturasPendentes(Long id) {
+        return alunoRepository.listarFaturasPendentes(id);
+    }
 }
