@@ -158,6 +158,11 @@ public class AlunoRepository {
         return jdbcTemplate.queryForMap(sql, idAluno);
     }
 
+    public List<Map<String, Object>> getTodasDisciplinasExistentes() {
+        String sql = "SELECT id_disciplina, nome FROM Disciplina";
+        return jdbcTemplate.queryForList(sql);
+    }
+
 
 
 }

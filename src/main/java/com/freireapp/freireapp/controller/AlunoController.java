@@ -75,5 +75,13 @@ public class AlunoController {
         return alunoService.listarFaturasPendentes(id);
     }
 
+    @GetMapping("/todas-disciplinas")
+    public List<Map<String, Object>> listarTodasDisciplinas() {
+        return alunoService.listarTodasDisciplinasExistentes();
+    }
+
+
+
+
 
 }

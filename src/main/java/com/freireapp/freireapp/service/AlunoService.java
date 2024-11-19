@@ -65,4 +65,9 @@ public class AlunoService {
     public Map<String, Object> listarFaturasPendentes(Long id) {
         return alunoRepository.listarFaturasPendentes(id);
     }
+
+    public List<Map<String, Object>> listarTodasDisciplinasExistentes() {
+        return alunoRepository.getTodasDisciplinasExistentes();
+    }
+
 }
