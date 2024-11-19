@@ -43,7 +43,7 @@ public class SecretariaService {
                 secretariaRepository.cadastrarSecretaria(data, idPessoa);
             }
 
-            return ResponseEntity.status(200).body("Usuário cadastrado com sucesso!");
+            return ResponseEntity.status(201).body("Usuário cadastrado com sucesso!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao cadastrar usuário: " + e.getMessage());
         }
