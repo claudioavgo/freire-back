@@ -1,5 +1,6 @@
 package com.freireapp.freireapp.service;
 
+import com.freireapp.freireapp.dto.AlunoDisciplinaDTO;
 import com.freireapp.freireapp.dto.CadastroDTO;
 import com.freireapp.freireapp.repository.PessoaRepository;
 import com.freireapp.freireapp.repository.SecretariaRepository;
@@ -20,7 +21,6 @@ public class SecretariaService {
 
     public ResponseEntity cadastro(CadastroDTO data) {
         try {
-
             Map<String, Object> emailExistente = pessoaRepository.getPessoaByEmail(data.email());
             if (emailExistente != null) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("E-mail já está cadastrado.");
@@ -59,6 +59,15 @@ public class SecretariaService {
             return ResponseEntity.status(HttpStatus.OK).body("Pessoa removida com sucesso.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao remover a pessoa.");
+        }
+    }
+
+    public ResponseEntity cadastrarDisciplina(AlunoDisciplinaDTO data) {
+        try {
+            secretariaRepository.cadastrarDisciplina(data);
+            return ResponseEntity.status(201).body("Aluno associado a disciplina com sucesso.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao associar aluno.");
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.freireapp.freireapp.repository;
 
 import com.freireapp.freireapp.PasswordUtils;
+import com.freireapp.freireapp.dto.AlunoDisciplinaDTO;
 import com.freireapp.freireapp.dto.CadastroDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -67,4 +68,11 @@ public class SecretariaRepository {
         String sql = "DELETE FROM Pessoa WHERE id_pessoa = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    public void cadastrarDisciplina(AlunoDisciplinaDTO data) {
+        String sql = "INSERT INTO Matriculado (fk_Disciplina_id_disciplina, fk_Aluno_fk_Pessoa_id_pessoa) VALUES (?, ?)";
+        jdbcTemplate.update(sql, data.idDisciplina(), data.idAluno());
+    }
+
+
 }

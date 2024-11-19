@@ -1,5 +1,6 @@
 package com.freireapp.freireapp.controller;
 
+import com.freireapp.freireapp.dto.AlunoDisciplinaDTO;
 import com.freireapp.freireapp.dto.CadastroDTO;
 import com.freireapp.freireapp.service.PessoaService;
 import com.freireapp.freireapp.service.SecretariaService;
@@ -24,4 +25,9 @@ public class SecretariaController {
     public ResponseEntity deletarPessoa(@PathVariable Long id){
         return secretariaService.deletarPessoa(id);
     };
+
+    @PostMapping("/cadastrar-disciplina")
+    public ResponseEntity cadastrarDisciplinaAluno (@RequestBody AlunoDisciplinaDTO data) {
+        return ResponseEntity.status(201).body(secretariaService.cadastrarDisciplina(data));
+    }
 }
