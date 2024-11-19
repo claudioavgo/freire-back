@@ -50,9 +50,10 @@ public class ProfessorService {
         Map<Long, Map<String, Object>> alunosMap = new HashMap<>();
 
         for (Map<String, Object> resultado : resultados) {
-            Long idAluno = ((Number) resultado.get("id_aluno")).longValue();
+            Long idAluno = ((Number) resultado.get("id_aluno")).longValue(); // Pegando o id do aluno
             Map<String, Object> alunoInfo = alunosMap.getOrDefault(idAluno, new HashMap<>());
             if (!alunosMap.containsKey(idAluno)) {
+                alunoInfo.put("id", idAluno);
                 alunoInfo.put("nome_aluno", resultado.get("nome_aluno"));
                 alunoInfo.put("periodo_aluno", resultado.get("periodo_aluno"));
                 alunoInfo.put("email_aluno", resultado.get("email_aluno"));
