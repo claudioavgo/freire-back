@@ -135,5 +135,14 @@ public class PessoaRepository {
         return aulas;
     }
 
+    public void deletarPessoaPorId(Long id) {
+        String sql = "DELETE FROM Pessoa WHERE id_pessoa = ?";
+        int rowsAffected = jdbcTemplate.update(sql, id);
+
+        if (rowsAffected == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pessoa com ID " + id + " não encontrada.");
+        }
+    }
+
 
 }

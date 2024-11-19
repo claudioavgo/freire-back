@@ -36,4 +36,10 @@ public class PessoaController {
     public List<Map<String, Object>> listarAulasDoDia(@PathVariable Long id) {
         return pessoaService.listarAulasDoDia(id);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletarPessoa(@PathVariable Long id) {
+        pessoaService.deletarPessoa(id);
+        return ResponseEntity.ok("Pessoa com ID " + id + " foi deletada com sucesso.");
+    }
 }

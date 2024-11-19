@@ -76,4 +76,8 @@ public class PessoaService {
         return pessoaRepository.getAulasDoDia(idPessoa);
     }
 
+    public void deletarPessoa(Long id) {
+        pessoaRepository.deletarPessoaPorId(id);
+    }
+
 }
