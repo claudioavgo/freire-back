@@ -74,5 +74,12 @@ public class SecretariaRepository {
         jdbcTemplate.update(sql, data.idDisciplina(), data.idAluno());
     }
 
+    public boolean alunoJaMatriculado(int idAluno, int idDisciplina) {
+        String sql = "SELECT COUNT(*) FROM Matriculado WHERE fk_Disciplina_id_disciplina = ? AND fk_Aluno_fk_Pessoa_id_pessoa = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, idDisciplina, idAluno);
+        return count != null && count > 0;
+    }
+
+
 
 }

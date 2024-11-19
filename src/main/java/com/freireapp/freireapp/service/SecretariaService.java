@@ -64,10 +64,16 @@ public class SecretariaService {
 
     public ResponseEntity cadastrarDisciplina(AlunoDisciplinaDTO data) {
         try {
+            if (secretariaRepository.alunoJaMatriculado(data.idAluno(), data.idDisciplina())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Aluno já está matriculado nesta disciplina.");
+            }
+
             secretariaRepository.cadastrarDisciplina(data);
             return ResponseEntity.status(201).body("Aluno associado a disciplina com sucesso.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao associar aluno.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao associar aluno: " + e.getMessage());
         }
     }
+
+
 }
