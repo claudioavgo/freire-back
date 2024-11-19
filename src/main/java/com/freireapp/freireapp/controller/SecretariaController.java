@@ -17,7 +17,7 @@ public class SecretariaController {
 
     @PostMapping("/cadastrar")
     public ResponseEntity cadastrarPessoa(@RequestBody CadastroDTO data) {
-        return ResponseEntity.status(200).body(secretariaService.cadastro(data));
+        return ResponseEntity.status(201).body(secretariaService.cadastro(data));
     };
 
     @DeleteMapping("/deletar/{id}")
