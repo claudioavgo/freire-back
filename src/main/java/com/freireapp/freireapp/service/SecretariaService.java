@@ -20,6 +20,7 @@ public class SecretariaService {
 
     public ResponseEntity cadastro(CadastroDTO data) {
         try {
+
             Map<String, Object> emailExistente = pessoaRepository.getPessoaByEmail(data.email());
             if (emailExistente != null) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("E-mail já está cadastrado.");

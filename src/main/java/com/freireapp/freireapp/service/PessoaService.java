@@ -1,5 +1,6 @@
 package com.freireapp.freireapp.service;
 
+import com.freireapp.freireapp.PasswordUtils;
 import com.freireapp.freireapp.pessoa.Pessoa;
 import com.freireapp.freireapp.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,16 +52,18 @@ public class PessoaService {
         return pessoaRepository.getPessoaById(id);
     }
 
-    public Pessoa autenticar(String email, String senha){
+    public Pessoa autenticar(String email, String senha) {
         Pessoa pessoa = pessoaRepository.getPessoaEmail(email);
+        String hashedInputPassword = PasswordUtils.hashPassword(senha);
 
-        if (pessoa.getSenha().equals(senha)) {
-            if(pessoaRepository.eAluno(pessoa.getIdPessoa())) {
+        if (pessoa.getSenha().equals(hashedInputPassword)) {
+            if (pessoaRepository.eAluno(pessoa.getIdPessoa())) {
                 pessoa.setTipo("aluno");
-            }  if(pessoaRepository.eProfessor(pessoa.getIdPessoa()))
-            {
+            }
+            if (pessoaRepository.eProfessor(pessoa.getIdPessoa())) {
                 pessoa.setTipo("professor");
-            } if(pessoaRepository.eSecretaria(pessoa.getIdPessoa())) {
+            }
+            if (pessoaRepository.eSecretaria(pessoa.getIdPessoa())) {
                 pessoa.setTipo("secretaria");
             }
             return pessoa;

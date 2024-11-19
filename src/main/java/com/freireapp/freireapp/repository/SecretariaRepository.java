@@ -1,5 +1,6 @@
 package com.freireapp.freireapp.repository;
 
+import com.freireapp.freireapp.PasswordUtils;
 import com.freireapp.freireapp.dto.CadastroDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,6 +21,7 @@ public class SecretariaRepository {
     }
 
     public void cadastrarPessoa(CadastroDTO data) {
+        String hashedPassword = PasswordUtils.hashPassword(data.senha()); // Hash the password
         String sql = "INSERT INTO Pessoa (nome, rua, numero, cidade, telefone_1, telefone_2, email, senha, data_nascimento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
                 data.nome(),
@@ -29,7 +31,7 @@ public class SecretariaRepository {
                 data.telefone1(),
                 data.telefone2(),
                 data.email(),
-                data.senha(),
+                hashedPassword,
                 data.dataNascimento()
         );
     }
