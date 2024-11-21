@@ -14,11 +14,18 @@ public class AlunoRepository {
     private JdbcTemplate jdbcTemplate;
 
     public Map<String, Object> getQuantidadeFaltas(Long idAluno, Long idDisciplina) {
-        String sql = "SELECT d.nome AS disciplina, SUM(CASE WHEN pr.status = 0 THEN 1 ELSE 0 END) AS faltas\n" +
-                "FROM Presenca pr\n" +
-                "JOIN Aula a ON pr.fk_Professor_fk_Pessoa_id_pessoa = a.fk_Professor_fk_Pessoa_id_pessoa\n" +
-                "JOIN Disciplina d ON a.fk_Disciplina_id_disciplina = d.id_disciplina\n" +
-                "WHERE pr.fk_Aluno_fk_Pessoa_id_pessoa = ? AND d.id_disciplina = ?";
+        String sql = "SELECT \n" +
+                "    d.nome AS disciplina, \n" +
+                "    COALESCE(SUM(CASE WHEN pr.status = 0 THEN 1 ELSE 0 END), 0) AS faltas\n" +
+                "FROM \n" +
+                "    Presenca pr\n" +
+                "JOIN \n" +
+                "    Aula a ON pr.fk_Professor_fk_Pessoa_id_pessoa = a.fk_Professor_fk_Pessoa_id_pessoa\n" +
+                "JOIN \n" +
+                "    Disciplina d ON a.fk_Disciplina_id_disciplina = d.id_disciplina\n" +
+                "WHERE \n" +
+                "    pr.fk_Aluno_fk_Pessoa_id_pessoa = ? \n" +
+                "    AND d.id_disciplina = ?";
         return jdbcTemplate.queryForMap(sql, idAluno, idDisciplina);
     }
 

@@ -58,6 +58,7 @@ public class ProfessorService {
                 alunoInfo.put("periodo_aluno", resultado.get("periodo_aluno"));
                 alunoInfo.put("email_aluno", resultado.get("email_aluno"));
                 alunoInfo.put("notas", new ArrayList<>());
+                alunoInfo.put("faltas", resultado.get("faltas_aluno")); // Adicionando a quantidade de faltas
                 alunosMap.put(idAluno, alunoInfo);
             }
             if (resultado.get("nota_aluno") != null) {
@@ -69,6 +70,7 @@ public class ProfessorService {
 
         return new ArrayList<>(alunosMap.values());
     }
+
 
     public List<Map<String, Object>> listarAvaliacao (@PathVariable Long id){
         return professorRepository.listarAvaliacao(id);
