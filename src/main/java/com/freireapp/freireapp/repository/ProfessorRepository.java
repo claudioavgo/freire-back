@@ -103,16 +103,27 @@ public class ProfessorRepository {
     }
 
     public List<Map<String, Object>> getAlunosPorDisciplina(Long idDisciplina) {
-        String sql = "SELECT p.id_pessoa, p.nome AS nome_aluno, a.fk_Pessoa_id_pessoa AS id_aluno, a.periodo AS periodo_aluno, " +
-                "p.email AS email_aluno, ra.nota AS nota_aluno, " +
-                "(SELECT COUNT(*) FROM Presenca WHERE fk_Aluno_fk_Pessoa_id_pessoa = a.fk_Pessoa_id_pessoa AND fk_Disciplina_id_disciplina = m.fk_Disciplina_id_disciplina AND presente = false) AS faltas_aluno " +
-                "FROM Matriculado m " +
-                "JOIN Aluno a ON a.fk_Pessoa_id_pessoa = m.fk_Aluno_fk_Pessoa_id_pessoa " +
-                "JOIN Pessoa p ON p.id_pessoa = a.fk_Pessoa_id_pessoa " +
-                "LEFT JOIN ResultadoAvaliacao ra ON ra.fk_Aluno_fk_Pessoa_id_pessoa = a.fk_Pessoa_id_pessoa AND ra.fk_Avaliacao_id_avaliacao IN " +
-                "(SELECT id_avaliacao FROM Avaliacao WHERE fk_Disciplina_id_disciplina = m.fk_Disciplina_id_disciplina) " +
-                "WHERE m.fk_Disciplina_id_disciplina = ? " +
-                "ORDER BY a.fk_Pessoa_id_pessoa";
+        String sql = "SELECT p.id_pessoa, \n" +
+                "       p.nome AS nome_aluno, \n" +
+                "       a.fk_Pessoa_id_pessoa AS id_aluno, \n" +
+                "       a.periodo AS periodo_aluno, \n" +
+                "       p.email AS email_aluno, \n" +
+                "       ra.nota AS nota_aluno, \n" +
+                "       (SELECT COUNT(*) \n" +
+                "        FROM Presenca \n" +
+                "        WHERE fk_Aluno_fk_Pessoa_id_pessoa = a.fk_Pessoa_id_pessoa \n" +
+                "          AND fk_Disciplina_id_disciplina = m.fk_Disciplina_id_disciplina \n" +
+                "          AND status = 0) AS faltas_aluno \n" +
+                "FROM Matriculado m \n" +
+                "JOIN Aluno a ON a.fk_Pessoa_id_pessoa = m.fk_Aluno_fk_Pessoa_id_pessoa \n" +
+                "JOIN Pessoa p ON p.id_pessoa = a.fk_Pessoa_id_pessoa \n" +
+                "LEFT JOIN ResultadoAvaliacao ra \n" +
+                "       ON ra.fk_Aluno_fk_Pessoa_id_pessoa = a.fk_Pessoa_id_pessoa \n" +
+                "      AND ra.fk_Avaliacao_id_avaliacao IN (SELECT id_avaliacao \n" +
+                "                                           FROM Avaliacao \n" +
+                "                                           WHERE fk_Disciplina_id_disciplina = m.fk_Disciplina_id_disciplina) \n" +
+                "WHERE m.fk_Disciplina_id_disciplina = ? \n" +
+                "ORDER BY a.fk_Pessoa_id_pessoa;";
 
         return jdbcTemplate.queryForList(sql, idDisciplina);
     }
