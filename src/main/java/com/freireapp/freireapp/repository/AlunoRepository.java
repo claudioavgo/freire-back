@@ -98,27 +98,27 @@ public class AlunoRepository {
 
     public Map<String, Object> getStreak(Long idAluno) {
         String sql = "WITH PresencasOrdenadas AS ( " +
-                "    SELECT pr.data, " +
+                "    SELECT DISTINCT pr.data, " +
                 "           pr.status, " +
-                "           ROW_NUMBER() OVER (PARTITION BY pr.fk_Aluno_fk_Pessoa_id_pessoa ORDER BY pr.data) AS rn " +
+                "           ROW_NUMBER() OVER (ORDER BY pr.data) AS rn " +
                 "    FROM Presenca pr " +
                 "    WHERE pr.fk_Aluno_fk_Pessoa_id_pessoa = ? " +
                 "), " +
+                "Grupos AS ( " +
+                "    SELECT data, " +
+                "           status, " +
+                "           rn, " +
+                "           CAST(rn AS SIGNED) - CAST(ROW_NUMBER() OVER (PARTITION BY status ORDER BY data) AS SIGNED) AS grupo " +
+                "    FROM PresencasOrdenadas " +
+                "    WHERE status = 1 " +
+                "), " +
                 "StreakAtual AS ( " +
                 "    SELECT COUNT(*) AS streak_atual " +
-                "    FROM ( " +
-                "        SELECT *, " +
-                "               SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END) OVER (ORDER BY data) AS grupo " +
-                "        FROM PresencasOrdenadas " +
-                "    ) SubPresencas " +
-                "    WHERE status = 1 " +
-                "      AND grupo = ( " +
-                "          SELECT MAX(grupo) " +
-                "          FROM ( " +
-                "              SELECT SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END) OVER (ORDER BY data) AS grupo " +
-                "              FROM PresencasOrdenadas " +
-                "          ) Temp " +
-                "      ) " +
+                "    FROM Grupos " +
+                "    WHERE grupo = ( " +
+                "        SELECT MAX(grupo) " +
+                "        FROM Grupos " +
+                "    ) " +
                 ") " +
                 "SELECT streak_atual " +
                 "FROM StreakAtual";
